@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agent Office</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #fff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --label: #475569;
+      --border: #cbd5e1;
+      --border-soft: #e2e8f0;
+      --accent: #1a56db;
+      --accent-disabled: #93c5fd;
+      --error-bg: #fef2f2;
+      --error-text: #dc2626;
+      --shadow: rgba(15, 23, 42, 0.06);
+    }
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --label: #cbd5e1;
+      --border: #475569;
+      --border-soft: #334155;
+      --accent: #3b82f6;
+      --accent-disabled: #1e3a5f;
+      --error-bg: #450a0a;
+      --error-text: #fca5a5;
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: clamp(1rem, 4vw, 2rem);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .header-text { flex: 1; min-width: 0; }
+    h1 { font-size: clamp(1.4rem, 4vw, 1.8rem); font-weight: 700; margin-bottom: 0.25rem; }
+    .subtitle { color: var(--muted); font-size: clamp(0.875rem, 2.5vw, 0.95rem); }
+
+    .icon-btn {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      min-height: 44px;
+      min-width: 44px;
+      padding: 0.5rem 0.85rem;
+      margin-top: 0;
+      width: auto;
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 1px 2px var(--shadow);
+    }
+    .icon-btn:hover { border-color: var(--border); }
+    .icon-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+    .dashboard {
+      display: grid;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .dashboard { grid-template-columns: minmax(0, 1fr) minmax(220px, 280px); align-items: start; }
+    }
+
+    .main-panel { min-width: 0; }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--label);
+      margin-bottom: 0.4rem;
+      margin-top: 1.25rem;
+    }
+    label:first-of-type { margin-top: 0; }
+
+    select, textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: 0.95rem;
+      font-family: inherit;
+      background: var(--surface);
+      color: var(--text);
+    }
+    textarea { min-height: 120px; resize: vertical; }
+
+    #run-btn {
+      margin-top: 1.25rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      min-height: 48px;
+    }
+    #run-btn:disabled { background: var(--accent-disabled); cursor: not-allowed; }
+
+    .result-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 1.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .result-box {
+      margin-top: 0;
+      padding: 1.25rem;
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      white-space: pre-wrap;
+      line-height: 1.7;
+      min-height: 80px;
+      font-size: 0.95rem;
+    }
+    .result-box.loading { color: var(--muted); }
+    .result-box.error {
+      color: var(--error-text);
+      background: var(--error-bg);
+      border-color: var(--border-soft);
+    }
+
+    .thinking-line {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-style: normal;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .spinner {
+      width: 1.35rem;
+      height: 1.35rem;
+      border: 2px solid var(--border-soft);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+
+    .history-panel {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      box-shadow: 0 1px 3px var(--shadow);
+    }
+    .history-panel h2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+    }
+    .history-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .history-item {
+      padding: 0.65rem 0.7rem;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border-soft);
+      font-size: 0.8rem;
+    }
+    .history-item.fail { border-left: 3px solid var(--error-text); }
+    .history-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.6rem;
+      align-items: baseline;
+      margin-bottom: 0.35rem;
+      color: var(--muted);
+      font-size: 0.72rem;
+    }
+    .history-agent {
+      font-weight: 700;
+      color: var(--text);
+      text-transform: capitalize;
+    }
+    .history-task {
+      color: var(--text);
+      line-height: 1.45;
+      word-break: break-word;
+    }
+    .history-empty {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-text">
+        <h1>Agent Office</h1>
+        <p class="subtitle">Choose an agent and give it a task.</p>
+      </div>
+      <button type="button" class="icon-btn" id="theme-toggle" aria-label="Toggle dark mode">
+        <span id="theme-toggle-label">Dark</span>
+      </button>
+    </header>
+
+    <div class="dashboard">
+      <main class="main-panel">
+        <label for="agent-select">Agent</label>
+        <select id="agent-select">
+          <option value="researcher">Researcher — searches the web</option>
+          <option value="writer">Writer — reads and writes files</option>
+          <option value="scheduler">Scheduler — helps plan your day</option>
+        </select>
+
+        <label for="task-input">Task</label>
+        <textarea id="task-input"
+          placeholder="e.g. What is the capital of France?  or  Write me a to-do list for tomorrow and save it to todo.txt"></textarea>
+
+        <button type="button" id="run-btn" onclick="runTask()">Run</button>
+
+        <p class="result-label">Result</p>
+        <div class="result-box" id="result" role="status" aria-live="polite">Your result will appear here.</div>
+      </main>
+
+      <aside class="history-panel" aria-labelledby="history-heading">
+        <h2 id="history-heading">Recent tasks</h2>
+        <p class="history-empty" id="history-empty">No tasks yet.</p>
+        <ul class="history-list" id="history-list" hidden></ul>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const HISTORY_KEY = 'agent-office-history';
+    const THEME_KEY = 'agent-office-theme';
+    const MAX_HISTORY = 5;
+
+    function escapeHtml(s) {
+      return String(s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
+    function loadHistory() {
+      try {
+        const raw = localStorage.getItem(HISTORY_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveHistoryEntry(entry) {
+      const h = loadHistory();
+      h.unshift({ ...entry, at: Date.now() });
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(0, MAX_HISTORY)));
+      renderHistory();
+    }
+
+    function formatTime(ts) {
+      const d = new Date(ts);
+      const now = Date.now();
+      const diff = Math.floor((now - ts) / 1000);
+      if (diff < 60) return 'Just now';
+      if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+      if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+      return d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('history-list');
+      const empty = document.getElementById('history-empty');
+      const items = loadHistory();
+      if (items.length === 0) {
+        empty.hidden = false;
+        list.hidden = true;
+        list.innerHTML = '';
+        return;
+      }
+      empty.hidden = true;
+      list.hidden = false;
+      list.innerHTML = items.map((it) => {
+        const ok = it.ok !== false;
+        const taskEsc = escapeHtml(it.task || '');
+        const agentEsc = escapeHtml(it.agent || '');
+        return (
+          '<li class="history-item' + (ok ? '' : ' fail') + '">' +
+            '<div class="history-meta">' +
+              '<span class="history-agent">' + agentEsc + '</span>' +
+              '<span>' + formatTime(it.at) + '</span>' +
+            '</div>' +
+            '<div class="history-task">' + taskEsc + '</div>' +
+          '</li>'
+        );
+      }).join('');
+    }
+
+    function initTheme() {
+      const saved = localStorage.getItem(THEME_KEY);
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const dark = saved === 'dark' || (saved !== 'light' && prefersDark);
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      updateThemeToggleLabel();
+    }
+
+    function updateThemeToggleLabel() {
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.getElementById('theme-toggle-label').textContent = dark ? 'Light' : 'Dark';
+    }
+
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const next = dark ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem(THEME_KEY, next);
+      updateThemeToggleLabel();
+    });
+
+    initTheme();
+    renderHistory();
+
+    function setThinkingUI(isThinking) {
+      const result = document.getElementById('result');
+      if (isThinking) {
+        result.className = 'result-box loading';
+        result.innerHTML =
+          '<div class="thinking-line">' +
+            '<span class="spinner" aria-hidden="true"></span>' +
+            '<span>Thinking…</span>' +
+          '</div>';
+      }
+    }
+
+    async function runTask() {
+      const agent = document.getElementById('agent-select').value;
+      const task = document.getElementById('task-input').value.trim();
+      const btn = document.getElementById('run-btn');
+      const result = document.getElementById('result');
+
+      if (!task) { alert('Please enter a task.'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Running…';
+      setThinkingUI(true);
+
+      let ok = true;
+      let resultText = '';
+
+      try {
+        const res = await fetch('http://localhost:8000/run', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ agent, task })
+        });
+        const data = await res.json();
+        if (data.error) {
+          ok = false;
+          result.className = 'result-box error';
+          result.textContent = 'Error: ' + data.error;
+          resultText = data.error;
+        } else {
+          result.className = 'result-box';
+          result.textContent = data.result;
+          resultText = data.result;
+        }
+      } catch (err) {
+        ok = false;
+        result.className = 'result-box error';
+        result.textContent =
+          'Could not connect to server.\nMake sure uvicorn is running (see Phase 8.3).';
+        resultText = err && err.message ? err.message : 'Network error';
+      }
+
+      saveHistoryEntry({ agent, task, ok });
+
+      btn.disabled = false;
+      btn.textContent = 'Run';
+    }
+  </script>
+</body>
+</html>
