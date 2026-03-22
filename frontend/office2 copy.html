@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Office 2 — Website Dev Team</title>
+  <style>
+    :root {
+      --bg: #0b1326; --surface: #131b2e; --surface2: #1a2236; --surface3: #222a3d;
+      --text: #dae2fd; --muted: #8c909f; --label: #c2c6d6; --border: #2d3449;
+      --border-soft: #1e2740; --accent: #adc6ff; --accent-bg: #1e3a6e;
+      --green: #4edea3; --green-bg: #003824; --green-text: #4edea3;
+      --error: #ffb4ab; --error-bg: #690005;
+      --warning: #ffd740; --warning-bg: #3d2800;
+      --shadow: rgba(0,0,0,.4); --shadow-lg: rgba(0,0,0,.7);
+    }
+    [data-theme="light"] {
+      --bg: #f0f4ff; --surface: #fff; --surface2: #f5f7ff; --surface3: #eaedfa;
+      --text: #1a2260; --muted: #6b7098; --label: #4a5080; --border: #d0d5f0;
+      --border-soft: #e4e8f8; --accent: #1a56db; --accent-bg: #dce8ff;
+      --green: #1a8a6a; --green-bg: #dcf5ec; --green-text: #1a8a6a;
+      --error: #c0392b; --error-bg: #fee2e2;
+      --shadow: rgba(26,34,96,.08); --shadow-lg: rgba(26,34,96,.2);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    .shell { display: flex; min-height: 100vh; }
+    .sidebar { width: 220px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border-soft); display: flex; flex-direction: column; padding: 1.25rem 0; position: fixed; top: 0; left: 0; height: 100vh; z-index: 40; overflow-y: auto; }
+    .content { margin-left: 220px; flex: 1; }
+    .topbar { background: var(--surface); border-bottom: 1px solid var(--border-soft); padding: .75rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 30; box-shadow: 0 4px 20px var(--shadow); }
+    .page { padding: 1.75rem 2rem; max-width: 1300px; }
+
+    /* Sidebar */
+    .sidebar-brand { padding: .75rem 1.25rem 1rem; border-bottom: 1px solid var(--border-soft); margin-bottom: .75rem; }
+    .sidebar-brand h1 { font-size: 1rem; font-weight: 800; letter-spacing: -.02em; }
+    .sidebar-brand p { font-size: .65rem; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: .08em; }
+    .nav-link { display: flex; align-items: center; gap: .6rem; padding: .5rem 1.25rem; font-size: .825rem; font-weight: 500; color: var(--muted); text-decoration: none; transition: background .12s, color .12s; }
+    .nav-link:hover { background: var(--surface2); color: var(--text); }
+    .nav-link.active { color: var(--accent); background: var(--accent-bg); border-right: 2px solid var(--accent); font-weight: 600; }
+    .nav-section-label { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); padding: .75rem 1.25rem .3rem; opacity: .5; }
+    .sidebar-footer { margin-top: auto; padding: 1rem 1.25rem; border-top: 1px solid var(--border-soft); }
+    .theme-btn { background: none; border: 1px solid var(--border); border-radius: 7px; padding: .35rem .7rem; font-size: .75rem; cursor: pointer; color: var(--muted); width: 100%; }
+
+    /* Topbar */
+    .topbar-left { display: flex; align-items: center; gap: 1rem; }
+    .topbar-title { font-size: .95rem; font-weight: 700; letter-spacing: -.01em; }
+    .back-link { font-size: .8rem; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: .3rem; }
+    .back-link:hover { color: var(--accent); }
+    .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); position: relative; }
+    .live-dot::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; background: var(--green); opacity: .3; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{transform:scale(1);opacity:.3} 50%{transform:scale(1.5);opacity:0} }
+    .live-label { font-size: .75rem; color: var(--green-text); font-weight: 600; }
+
+    /* Manager card */
+    .manager-card { background: var(--surface2); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 20px var(--shadow); }
+    .manager-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .manager-left { display: flex; align-items: center; gap: 1rem; }
+    .manager-avatar { width: 48px; height: 48px; background: var(--accent-bg); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; border: 1px solid var(--border); }
+    .manager-name { font-size: 1rem; font-weight: 700; }
+    .manager-role { font-size: .775rem; color: var(--muted); margin-top: 2px; }
+    .manager-status { background: var(--surface3); border: 1px solid var(--border); border-radius: 8px; padding: .65rem 1rem; display: flex; align-items: center; gap: 1rem; }
+    .manager-status-label { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 2px; }
+    .manager-status-val { font-size: .875rem; font-weight: 700; color: var(--accent); }
+    .status-divider { width: 1px; height: 32px; background: var(--border); }
+    .validated-icon { font-size: 1.5rem; color: var(--green-text); }
+
+    /* Agent grid */
+    .agents-layout { display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; align-items: start; }
+    @media (max-width: 1100px) { .agents-layout { grid-template-columns: 1fr; } }
+    .agents-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; }
+
+    /* Agent card */
+    .agent-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1.1rem; transition: border-color .15s, box-shadow .15s; }
+    .agent-card:hover { border-color: var(--accent); box-shadow: 0 4px 20px var(--shadow); }
+    .agent-card.running { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .agent-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: .85rem; }
+    .agent-icon { width: 40px; height: 40px; border-radius: 8px; background: var(--surface3); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; border: 1px solid var(--border); }
+    .agent-status-badge { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; padding: 3px 8px; border-radius: 99px; }
+    .status-idle { background: var(--surface3); color: var(--muted); }
+    .status-running { background: var(--accent-bg); color: var(--accent); }
+    .status-done { background: var(--green-bg); color: var(--green-text); }
+    .status-error { background: var(--error-bg); color: var(--error); }
+    .agent-name { font-size: .875rem; font-weight: 700; margin-bottom: 2px; }
+    .agent-desc { font-size: .75rem; color: var(--muted); margin-bottom: .85rem; line-height: 1.4; }
+
+    /* Task input in agent card */
+    .agent-task-input { width: 100%; background: var(--surface3); border: 1px solid var(--border); border-radius: 7px; padding: .5rem .65rem; font-size: .775rem; color: var(--text); font-family: inherit; resize: none; min-height: 60px; transition: border-color .12s; }
+    .agent-task-input:focus { outline: none; border-color: var(--accent); }
+    .agent-task-input::placeholder { color: var(--muted); }
+    .agent-run-btn { margin-top: .5rem; width: 100%; padding: .45rem; background: var(--accent-bg); color: var(--accent); border: 1px solid var(--accent); border-radius: 7px; font-size: .775rem; font-weight: 700; cursor: pointer; transition: background .12s; }
+    .agent-run-btn:hover:not(:disabled) { background: var(--accent); color: var(--bg); }
+    .agent-run-btn:disabled { opacity: .4; cursor: not-allowed; }
+
+    /* Result snippet on card */
+    .agent-result-snippet { margin-top: .6rem; font-size: .72rem; color: var(--muted); background: var(--surface3); border-radius: 6px; padding: .45rem .6rem; border: 1px solid var(--border); line-height: 1.5; cursor: pointer; }
+    .agent-result-snippet:hover { border-color: var(--accent); color: var(--text); }
+
+    /* Activity feed */
+    .feed-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; box-shadow: 0 2px 8px var(--shadow); }
+    .feed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+    .feed-title { font-size: .7rem; font-weight: 800; text-transform: uppercase; letter-spacing: .15em; color: var(--label); }
+    .feed-list { display: flex; flex-direction: column; gap: 0; }
+    .feed-item { display: flex; gap: .85rem; }
+    .feed-timeline { display: flex; flex-direction: column; align-items: center; }
+    .feed-dot { width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--accent); background: var(--accent-bg); flex-shrink: 0; margin-top: 3px; }
+    .feed-dot.green { border-color: var(--green); background: var(--green-bg); }
+    .feed-dot.gray { border-color: var(--muted); background: var(--surface3); }
+    .feed-line { width: 1px; flex: 1; background: var(--border); margin: 3px 0; min-height: 20px; }
+    .feed-content { padding-bottom: 1rem; flex: 1; min-width: 0; }
+    .feed-text { font-size: .775rem; line-height: 1.5; color: var(--text); word-break: break-word; }
+    .feed-text strong { color: var(--accent); }
+    .feed-text .green-text { color: var(--green-text); }
+    .feed-time { font-size: .65rem; color: var(--muted); margin-top: 2px; font-family: monospace; }
+    .feed-empty { font-size: .825rem; color: var(--muted); text-align: center; padding: 1.5rem 0; }
+
+    /* Modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1.5rem; opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .modal-backdrop.open { opacity: 1; pointer-events: all; }
+    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; max-width: 760px; width: 100%; max-height: 85vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 30px 80px var(--shadow-lg); transform: translateY(14px); transition: transform .2s; }
+    .modal-backdrop.open .modal { transform: translateY(0); }
+    .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+    .modal-header-info h3 { font-size: 1rem; font-weight: 700; }
+    .modal-header-info p { font-size: .78rem; color: var(--muted); margin-top: 3px; }
+    .modal-close { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 1.3rem; padding: .2rem; line-height: 1; }
+    .modal-close:hover { color: var(--text); }
+    .modal-body { padding: 1.5rem; overflow-y: auto; flex: 1; white-space: pre-wrap; font-size: .875rem; line-height: 1.75; }
+    .modal-validation { margin: 0 1.5rem 1.5rem; padding: 1rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; }
+    .modal-validation-title { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); margin-bottom: .5rem; }
+    .modal-validation p { font-size: .825rem; line-height: 1.55; }
+    .validation-pass { border-left: 3px solid var(--green); }
+    .validation-fail { border-left: 3px solid var(--error); }
+
+    /* Spinners */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .6s linear infinite; vertical-align: middle; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(60px); background: var(--text); color: var(--bg); padding: .6rem 1.25rem; border-radius: 8px; font-size: .8rem; font-weight: 600; z-index: 200; transition: transform .2s; white-space: nowrap; box-shadow: 0 4px 20px var(--shadow-lg); }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; } .page { padding: 1rem; } }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <h1>Project Hub</h1>
+      <p>Office 2 — Website Team</p>
+    </div>
+    <div class="nav-section-label">Navigation</div>
+    <a class="nav-link active" href="/office2">💻 Dashboard</a>
+    <a class="nav-link" href="/">⌂ Main hub</a>
+    <a class="nav-link" href="/office1">📚 Homework</a>
+    <div class="nav-section-label">Agents</div>
+    <a class="nav-link" href="#" onclick="scrollToAgent('product_manager')">PM</a>
+    <a class="nav-link" href="#" onclick="scrollToAgent('ui_designer')">Designer</a>
+    <a class="nav-link" href="#" onclick="scrollToAgent('frontend_dev')">Frontend</a>
+    <a class="nav-link" href="#" onclick="scrollToAgent('backend_dev')">Backend</a>
+    <a class="nav-link" href="#" onclick="scrollToAgent('qa_tester')">QA</a>
+    <a class="nav-link" href="#" onclick="scrollToAgent('devops')">DevOps</a>
+    <div class="sidebar-footer">
+      <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">☀ Light mode</button>
+    </div>
+  </aside>
+
+  <div class="content">
+    <div class="topbar">
+      <div class="topbar-left">
+        <a class="back-link" href="/">← Hub</a>
+        <span class="topbar-title">Office 2 — Website Dev Team</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.6rem;">
+        <div class="live-dot"></div>
+        <span class="live-label">Live</span>
+      </div>
+    </div>
+
+    <div class="page">
+      <!-- Manager card -->
+      <div class="manager-card">
+        <div class="manager-header">
+          <div class="manager-left">
+            <div class="manager-avatar">🎯</div>
+            <div>
+              <div class="manager-name">Manager Agent</div>
+              <div class="manager-role">Validates all outputs against rubrics and quality standards · Claude Sonnet</div>
+            </div>
+          </div>
+          <div class="manager-status" id="manager-status">
+            <div>
+              <div class="manager-status-label">Validation status</div>
+              <div class="manager-status-val" id="manager-status-val">Ready</div>
+            </div>
+            <div class="status-divider"></div>
+            <div class="validated-icon" id="manager-icon">⊙</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="agents-layout">
+        <!-- Agent cards -->
+        <div class="agents-grid" id="agents-grid">
+          <!-- rendered by JS -->
+        </div>
+
+        <!-- Activity feed -->
+        <div class="feed-card">
+          <div class="feed-header">
+            <span class="feed-title">Activity feed</span>
+            <button onclick="clearFeed()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:.7rem;">Clear</button>
+          </div>
+          <div class="feed-list" id="feed-list">
+            <div class="feed-empty">No activity yet. Run an agent to get started.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-header-info">
+        <h3 id="modal-title">Result</h3>
+        <p id="modal-agent-label"></p>
+      </div>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div id="modal-validation-area"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const AGENTS = [
+    { key:'product_manager', name:'Product Manager', icon:'📋', desc:'Writes specs and manages the backlog' },
+    { key:'ui_designer',     name:'UI/UX Designer',  icon:'🎨', desc:'Designs components and generates Stitch prompts' },
+    { key:'frontend_dev',    name:'Frontend Dev',    icon:'⚡', desc:'Writes HTML, CSS, and JavaScript' },
+    { key:'backend_dev',     name:'Backend Dev',     icon:'⚙️',  desc:'Writes FastAPI routes and integrations' },
+    { key:'qa_tester',       name:'QA Tester',       icon:'🔍', desc:'Reviews code for bugs and quality issues' },
+    { key:'devops',          name:'DevOps',          icon:'🚀', desc:'Manages deployment and Render config' },
+  ];
+
+  let agentStates = {};
+  let agentResults = {};
+  let feedItems = [];
+  AGENTS.forEach(a=>{ agentStates[a.key]='idle'; agentResults[a.key]=null; });
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function initTheme(){
+    const saved = localStorage.getItem('ao-theme');
+    const dark = saved === 'dark' || saved == null;
+    document.documentElement.setAttribute('data-theme', dark?'dark':'light');
+    document.getElementById('theme-btn').textContent = dark ? '☀ Light mode' : '🌙 Dark mode';
+  }
+  function toggleTheme(){
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', dark?'light':'dark');
+    localStorage.setItem('ao-theme', dark?'light':'dark');
+    document.getElementById('theme-btn').textContent = dark ? '🌙 Dark mode' : '☀ Light mode';
+  }
+
+  function showToast(msg, dur=2800){
+    const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), dur);
+  }
+
+  function statusClass(s){ return {idle:'status-idle',running:'status-running',done:'status-done',error:'status-error'}[s]||'status-idle'; }
+  function statusLabel(s){ return {idle:'Idle',running:'Working…',done:'Done',error:'Error'}[s]||'Idle'; }
+
+  function renderAgents(){
+    const grid = document.getElementById('agents-grid');
+    grid.innerHTML = AGENTS.map(a=>{
+      const state = agentStates[a.key];
+      const result = agentResults[a.key];
+      const snippet = result
+        ? `<div class="agent-result-snippet" onclick="openModal('${a.key}')">${esc(result.result.replace(/\*\*/g,'').slice(0,100))}… <span style="color:var(--accent);font-size:.7rem;">(click to expand)</span></div>`
+        : '';
+      return `<div class="agent-card${state==='running'?' running':''}" id="card-${a.key}">
+        <div class="agent-card-header">
+          <div class="agent-icon">${a.icon}</div>
+          <span class="agent-status-badge ${statusClass(state)}" id="badge-${a.key}">${statusLabel(state)}</span>
+        </div>
+        <div class="agent-name">${esc(a.name)}</div>
+        <div class="agent-desc">${esc(a.desc)}</div>
+        <textarea class="agent-task-input" id="task-${a.key}" placeholder="Describe a task for ${esc(a.name).toLowerCase()}…" rows="3"></textarea>
+        <button class="agent-run-btn" id="btn-${a.key}" onclick="runAgent('${a.key}')" ${state==='running'?'disabled':''}>
+          ${state==='running'?'<span class="spin"></span> Running…':'Run'}
+        </button>
+        ${snippet}
+      </div>`;
+    }).join('');
+  }
+
+  function setAgentState(key, state){
+    agentStates[key] = state;
+    const badge = document.getElementById('badge-'+key);
+    const btn   = document.getElementById('btn-'+key);
+    const card  = document.getElementById('card-'+key);
+    if(badge){ badge.className='agent-status-badge '+statusClass(state); badge.textContent=statusLabel(state); }
+    if(btn){ btn.disabled=state==='running'; btn.innerHTML=state==='running'?'<span class="spin"></span> Running…':'Run'; }
+    if(card){ card.classList.toggle('running', state==='running'); }
+  }
+
+  function addFeedItem(html, color='accent'){
+    const now = new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    feedItems.unshift({ html, now, color });
+    renderFeed();
+  }
+  function clearFeed(){ feedItems=[]; renderFeed(); }
+  function renderFeed(){
+    const list = document.getElementById('feed-list');
+    if(!feedItems.length){ list.innerHTML='<div class="feed-empty">No activity yet.</div>'; return; }
+    list.innerHTML = feedItems.slice(0,20).map((item,i)=>{
+      const isLast = i === feedItems.slice(0,20).length-1;
+      const dotColor = item.color==='green'?'green':item.color==='gray'?'gray':'';
+      return `<div class="feed-item">
+        <div class="feed-timeline">
+          <div class="feed-dot ${dotColor}"></div>
+          ${!isLast?'<div class="feed-line"></div>':''}
+        </div>
+        <div class="feed-content">
+          <div class="feed-text">${item.html}</div>
+          <div class="feed-time">${item.now}</div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  function openModal(agentKey){
+    const result = agentResults[agentKey];
+    if(!result) return;
+    const agent = AGENTS.find(a=>a.key===agentKey);
+    document.getElementById('modal-title').textContent = (agent?agent.name:agentKey) + ' — Result';
+    document.getElementById('modal-agent-label').textContent = result.validation
+      ? (result.validation.valid ? '✓ Validated by manager' : '⚠ Needs revision')
+      : 'Not yet validated';
+    document.getElementById('modal-body').textContent = result.result;
+    const valArea = document.getElementById('modal-validation-area');
+    if(result.validation){
+      const v = result.validation;
+      const cls = v.valid ? 'validation-pass' : 'validation-fail';
+      valArea.innerHTML = `<div class="modal-validation ${cls}">
+        <div class="modal-validation-title">Manager validation · Score: ${esc(v.score_estimate||'N/A')}</div>
+        <p>${esc(v.feedback||'')}</p>
+      </div>`;
+    } else {
+      valArea.innerHTML = '';
+    }
+    document.getElementById('modal').classList.add('open');
+  }
+  function closeModal(e){
+    if(!e||e.target===document.getElementById('modal')){
+      document.getElementById('modal').classList.remove('open');
+    }
+  }
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+
+  function scrollToAgent(key){
+    const el = document.getElementById('card-'+key);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  async function runAgent(key){
+    const taskEl = document.getElementById('task-'+key);
+    const task = taskEl ? taskEl.value.trim() : '';
+    if(!task){ showToast('Please enter a task first.'); taskEl && taskEl.focus(); return; }
+    const agent = AGENTS.find(a=>a.key===key);
+    setAgentState(key, 'running');
+    addFeedItem(`<strong>${agent.name}</strong> started: "${esc(task.slice(0,60))}${task.length>60?'…':''}"`, 'accent');
+    updateManagerStatus('Running…', '⊙');
+    try {
+      const res  = await fetch('/website', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({agent:key, task}) });
+      const data = await res.json();
+      if(data.error) throw new Error(data.error);
+      agentResults[key] = data;
+      setAgentState(key, 'done');
+      // Update snippet without full re-render
+      const card = document.getElementById('card-'+key);
+      let snippet = card.querySelector('.agent-result-snippet');
+      const snippetHtml = `<div class="agent-result-snippet" onclick="openModal('${key}')">${esc(data.result.replace(/\*\*/g,'').slice(0,100))}… <span style="color:var(--accent);font-size:.7rem;">(click to expand)</span></div>`;
+      if(snippet){ snippet.outerHTML = snippetHtml; }
+      else { card.insertAdjacentHTML('beforeend', snippetHtml); }
+      const valid = data.validation;
+      if(valid){
+        addFeedItem(`<span class="${valid.valid?'green-text':''}"><strong>${agent.name}</strong> ${valid.valid?'passed':'failed'} manager validation · Score: ${esc(valid.score_estimate||'N/A')}</span>`, valid.valid?'green':'gray');
+        updateManagerStatus(valid.valid?'All clear ✓':'Needs revision', valid.valid?'✓':'⚠');
+      } else {
+        addFeedItem(`<strong>${agent.name}</strong> completed task`, 'green');
+        updateManagerStatus('Done ✓', '✓');
+      }
+      showToast(agent.name + ' completed ✓');
+    } catch(e){
+      setAgentState(key, 'error');
+      addFeedItem(`<strong>${agent.name}</strong> error: ${esc(e.message.slice(0,80))}`, 'gray');
+      updateManagerStatus('Error detected', '✗');
+      showToast('Error: ' + e.message.slice(0,60), 4000);
+    }
+    // Re-render badge/btn state only
+    const badge = document.getElementById('badge-'+key);
+    const btn   = document.getElementById('btn-'+key);
+    if(badge){ const s=agentStates[key]; badge.className='agent-status-badge '+statusClass(s); badge.textContent=statusLabel(s); }
+    if(btn){ btn.disabled=false; btn.textContent='Run'; }
+  }
+
+  function updateManagerStatus(text, icon){
+    const val = document.getElementById('manager-status-val');
+    const ic  = document.getElementById('manager-icon');
+    if(val) val.textContent = text;
+    if(ic)  ic.textContent  = icon;
+  }
+
+  initTheme();
+  renderAgents();
+  renderFeed();
+</script>
+</body>
+</html>
