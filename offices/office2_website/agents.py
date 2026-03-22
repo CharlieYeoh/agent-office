@@ -3,7 +3,7 @@ from main import Agent
 
 WEBSITE_REPO = os.environ.get(
     "WEBSITE_REPO_URL",
-    "https://github.com/YOUR_USERNAME/YOUR_REPO"
+    "https://github.com/CharlieYeoh/agent-office"
 )
 
 
@@ -13,7 +13,8 @@ product_manager_agent = Agent(
     name="Product Manager",
     role="senior product manager for a web development team",
     goal="translate feature requests into clear specs the dev team can act on",
-    tool_names=["write_file", "read_file", "get_datetime"],
+    tool_names=["write_file", "read_file", "get_datetime",
+            "list_repo_files", "read_repo_file", "get_repo_info"],
     model="claude-sonnet-4-20250514",
     system_prompt_override=(
         "You are a senior product manager leading a small web development team "
@@ -64,7 +65,8 @@ ui_designer_agent = Agent(
     name="UI/UX Designer",
     role="senior UI/UX designer specialising in clean, accessible web design",
     goal="design and document the visual and interaction design of the website",
-    tool_names=["write_file", "read_file", "web_search", "get_datetime"],
+    tool_names=["write_file", "read_file", "web_search", "get_datetime",
+            "list_repo_files", "read_repo_file", "get_repo_info"],
     model="claude-sonnet-4-20250514",
     system_prompt_override=(
         "You are a senior UI/UX designer with expertise in modern, accessible web design.\n\n"
@@ -106,7 +108,8 @@ frontend_dev_agent = Agent(
     name="Frontend Developer",
     role="senior frontend developer specialising in HTML, CSS, and JavaScript",
     goal="implement frontend features from design specs",
-    tool_names=["write_file", "read_file", "get_datetime"],
+    tool_names=["read_repo_file", "write_repo_file", "list_repo_files",
+            "get_repo_info", "get_datetime"],
     model="claude-sonnet-4-20250514",
     system_prompt_override=(
         "You are a senior frontend developer. You write clean, semantic, accessible "
@@ -149,7 +152,8 @@ backend_dev_agent = Agent(
     name="Backend Developer",
     role="senior backend developer specialising in Python and FastAPI",
     goal="implement backend features, API endpoints, and integrations",
-    tool_names=["write_file", "read_file", "get_datetime"],
+    tool_names=["read_repo_file", "write_repo_file", "list_repo_files",
+            "get_repo_info", "get_datetime"],
     model="claude-sonnet-4-20250514",
     system_prompt_override=(
         "You are a senior backend developer specialising in Python and FastAPI.\n\n"
@@ -198,7 +202,8 @@ qa_tester_agent = Agent(
     name="QA Tester",
     role="senior QA engineer who reviews code for bugs and quality issues",
     goal="review code written by the dev agents and produce a structured quality report",
-    tool_names=["read_file", "write_file", "get_datetime"],
+    tool_names=["read_repo_file", "list_repo_files", "write_file",
+            "get_repo_info", "get_datetime"],
     model="claude-haiku-4-5-20251001",
     system_prompt_override=(
         "You are a meticulous QA engineer. Your job is to find problems before they "
@@ -255,7 +260,8 @@ devops_agent = Agent(
     name="DevOps",
     role="senior DevOps engineer managing deployment and infrastructure",
     goal="manage deployment, CI/CD, and environment configuration for the website",
-    tool_names=["read_file", "write_file", "get_datetime"],
+    tool_names=["read_repo_file", "write_repo_file", "list_repo_files",
+            "delete_repo_file", "get_repo_info", "get_datetime"],
     model="claude-haiku-4-5-20251001",
     system_prompt_override=(
         "You are a senior DevOps engineer responsible for deployment and infrastructure.\n\n"

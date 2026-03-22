@@ -6,6 +6,11 @@ from datetime import datetime, date, timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 
+from tools.github_tool import (
+    list_repo_files, read_repo_file,
+    write_repo_file, delete_repo_file, get_repo_info
+)
+
 load_dotenv()
 
 
@@ -419,6 +424,65 @@ TOOL_REGISTRY = {
                 "reply_text": {"type": "string", "description": "The full text of the reply"}
             },
             "required": ["message_id", "reply_text"]
+        }
+    }),
+
+
+    # ── GitHub ──────────────────────────────────────────────────────────────
+    "list_repo_files": (list_repo_files, {
+    "name": "list_repo_files",
+    "description": "List files and folders in the website GitHub repository.",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "path": {"type": "string", "description": "Folder path to list (empty string for root)"}
+        },
+        "required": []
+    }
+    }),
+    "read_repo_file": (read_repo_file, {
+        "name": "read_repo_file",
+        "description": "Read the contents of a file from the website GitHub repository.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "filepath": {"type": "string", "description": "Path to the file e.g. 'index.html' or 'css/style.css'"}
+            },
+            "required": ["filepath"]
+        }
+    }),
+    "write_repo_file": (write_repo_file, {
+        "name": "write_repo_file",
+        "description": "Write or update a file in the website GitHub repository. Creates a real commit.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "filepath":       {"type": "string", "description": "Path to the file"},
+                "content":        {"type": "string", "description": "Full file content to write"},
+                "commit_message": {"type": "string", "description": "Git commit message"}
+            },
+            "required": ["filepath", "content"]
+        }
+    }),
+    "delete_repo_file": (delete_repo_file, {
+        "name": "delete_repo_file",
+        "description": "Delete a file from the website GitHub repository.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "filepath":       {"type": "string", "description": "Path to the file to delete"},
+                "commit_message": {"type": "string", "description": "Git commit message"}
+            },
+            "required": ["filepath"]
+        }
+    }),
+    "get_repo_info": (get_repo_info, {
+        "name": "get_repo_info",
+        "description": "Get basic information about the website GitHub repository.",
+        "input_schema": {
+            "type": "object",
+            "properties": {},
+            "required": []
         }
     }),
 
