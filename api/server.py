@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from main import AGENTS, run_agent
+from main import AGENTS, run_agent, client
 from offices.office1_homework.agents import HOMEWORK_AGENTS
 from offices.office2_website.agents import WEBSITE_AGENTS
 from offices.manager import Manager
