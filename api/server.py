@@ -113,7 +113,7 @@ def fetch_all_homework():
             agent = HOMEWORK_AGENTS[name]
             from main import Memory
             agent.memory = Memory()
-            result = run_agent(task, agent, verbose=False)
+            result = run_agent(task, agent, verbose=False, skip_memory=True)
             return name, result
         except Exception as e:
             return name, f"Error in {name}: {e}"

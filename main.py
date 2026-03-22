@@ -62,16 +62,15 @@ class Agent:
 
 
 # ── Agent loop ────────────────────────────────────────────────────────────
-def run_agent(task: str, agent: Agent, verbose: bool = True) -> str:
-    """
-    Run a single agent on a task.
-    Automatically injects relevant memory context and saves the result.
-    """
+def run_agent(task: str, agent: Agent, verbose: bool = True,
+              skip_memory: bool = False) -> str:
     from memory.db import build_memory_context, save_memory
 
-    # Build memory context from previous sessions
-    memory_ctx = build_memory_context(agent.name, task)
-    full_task  = (memory_ctx + task) if memory_ctx else task
+    if skip_memory:
+        full_task = task
+    else:
+        memory_ctx = build_memory_context(agent.name, task)
+        full_task  = (memory_ctx + task) if memory_ctx else task
 
     agent.memory.add({"role": "user", "content": full_task})
 
@@ -86,7 +85,7 @@ def run_agent(task: str, agent: Agent, verbose: bool = True) -> str:
     for iteration in range(10):
         response = client.messages.create(
             model=agent.model,
-            max_tokens=2048,
+            max_tokens=1024 if "haiku" in agent.model else 2048,
             system=agent.system_prompt,
             tools=agent.tools_schema,
             messages=agent.memory.short_term,

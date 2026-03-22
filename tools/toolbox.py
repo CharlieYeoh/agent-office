@@ -183,14 +183,26 @@ def get_homework_for_subject(subject_name: str, days_ahead: int = 14) -> str:
 
 def _gmail_service():
     from google.oauth2.credentials import Credentials
+    from google.auth.transport.requests import Request
     from googleapiclient.discovery import build
+    import json as _json
 
     token_json = os.environ.get("GOOGLE_TOKEN_JSON")
     if token_json:
-        import json as _json
-        creds = Credentials.from_authorized_user_info(_json.loads(token_json))
-    else:
+        info = _json.loads(token_json)
+        creds = Credentials.from_authorized_user_info(info)
+    elif os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json")
+    else:
+        raise RuntimeError(
+            "No Google credentials found. "
+            "Set GOOGLE_TOKEN_JSON in Render environment variables."
+        )
+
+    # Auto-refresh if expired
+    if creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+
     return build("gmail", "v1", credentials=creds)
 
 
