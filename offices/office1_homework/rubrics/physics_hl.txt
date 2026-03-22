@@ -1,0 +1,135 @@
+IB Physics Higher Level – Marking Criteria
+==========================================
+
+Internal assessment criteria—SL and HL
+Physics guide 1
+Internal assessment criteria—SL and HL
+Criterion Maximum number of marks
+available
+Weighting (%)
+Research design 6 25
+Data analysis 6 25
+Conclusion 6 25
+Evaluation 6 25
+Total 24 100
+Internal assessment criteria—SL and HL
+2 Physics guide
+Research design
+This criterion assesses the extent to which the student effectively communicates the methodology (purpose
+and practice) used to address the research question.
+Marks Level descriptor
+0 The report does not reach the standard described by the descriptors below.
+1–2 • The research question is stated without context.
+• Methodological considerations associated with collecting data relevant to the
+research question are stated.
+• The description of the methodology for collecting or selecting data lacks the
+detail to allow for the investigation to be reproduced.
+3–4 • The research question is outlined within a broad context.
+• Methodological considerations associated with collecting relevant and
+sufficient data to answer the research question are described.
+• The description of the methodology for collecting or selecting data allows for
+the investigation to be reproduced with few ambiguities or omissions.
+5–6 • The research question is described within a specific and appropriate context.
+• Methodological considerations associated with collecting relevant and
+sufficient data to answer the research question are explained.
+• The description of the methodology for collecting or selecting data allows for
+the investigation to be reproduced.
+Clarifications for research design
+A research question with context should contain reference to the dependent and independent variables
+or two correlated variables, include a concise description of the system in which the research question is
+embedded, and include background theory of direct relevance.
+Methodological considerations include:
+• the selection of the methods for measuring the dependent and independent variables
+• the selection of the databases or model and the sampling of data
+• the decisions regarding the scope, quantity and quality of measurements (e.g. the range, interval
+or frequency of the independent variable, repetition and precision of measurements)
+• the identification of control variables and the choice of method of their control
+• the recognition of any safety, ethical or environmental issues that needed to be taken into account.
+The description of the methodology refers to presenting sufficiently detailed information (such
+as specific materials used and precise procedural steps) while avoiding unnecessary or repetitive
+information, so that the reader may readily understand how the methodology was implemented and
+could in principle repeat the investigation.
+Internal assessment criteria—SL and HL
+Physics guide 3
+Data analysis
+This criterion assesses the extent to which the student’s report provides evidence that the student has
+recorded, processed and presented the data in ways that are relevant to the research question.
+Marks Level descriptor
+0 The report does not reach a standard described by the descriptors below.
+1–2 • The recording and processing of the data is communicated but is neither clear nor
+precise.
+• The recording and processing of data shows limited evidence of the consideration
+of uncertainties.
+• Some processing of data relevant to addressing the research question is carried
+out but with major omissions, inaccuracies or inconsistencies.
+3–4 • The communication of the recording and processing of the data is either clear or
+precise.
+• The recording and processing of data shows evidence of a consideration of
+uncertainties but with some significant omissions or inaccuracies.
+• The processing of data relevant to addressing the research question is carried out
+but with some significant omissions, inaccuracies or inconsistencies.
+5–6 • The communication of the recording and processing of the data is both clear and
+precise.
+• The recording and processing of data shows evidence of an appropriate
+consideration of uncertainties.
+• The processing of data relevant to addressing the research question is carried out
+appropriately and accurately.
+Clarifications for data analysis
+Data refers to quantitative data or a combination of both quantitative and qualitative data.
+Communication
+• Clear communication means that the method of processing can be understood easily.
+• Precise communication refers to following conventions correctly, such as those relating to the
+annotation of graphs and tables or the use of units, decimal places and significant figures.
+Consideration of uncertainties is subject specific and further guidance is given in the Physics teacher
+support material.
+Major omissions, inaccuracies or inconsistencies impede the possibility of drawing a valid conclusion that
+addresses the research question.
+Significant omissions, inaccuracies or inconsistencies allow the possibility of drawing a conclusion that
+addresses the research question but with some limit to its validity or detail.
+Internal assessment criteria—SL and HL
+4 Physics guide
+Conclusion
+This criterion assesses the extent to which the student successfully answers their research question with
+regard to their analysis and the accepted scientific context.
+Marks Level descriptor
+0 The report does not reach a standard described by the descriptors below.
+1–2 • A conclusion is stated that is relevant to the research question but is not
+supported by the analysis presented.
+• The conclusion makes superficial comparison to the accepted scientific context.
+3–4 • A conclusion is described that is relevant to the research question but is not fully
+consistent with the analysis presented.
+• A conclusion is described that makes some relevant comparison to the accepted
+scientific context.
+5–6 • A conclusion is justified that is relevant to the research question and fully
+consistent with the analysis presented.
+• A conclusion is justified through relevant comparison to the accepted scientific
+context.
+Clarifications for conclusion
+A conclusion that is fully consistent requires the interpretation of processed data including associated
+uncertainties.
+Scientific context refers to information that could come from published material (paper or online),
+published values, course notes, textbooks or other outside sources. The citation of published materials
+must be sufficiently detailed to allow these sources to be traceable.
+Internal assessment criteria—SL and HL
+Physics guide 5
+Evaluation
+This criterion assesses the extent to which the student’s report provides evidence of evaluation of the
+investigation methodology and has suggested improvements.
+Marks Level descriptor
+0 The report does not reach a standard described by the descriptors below.
+1–2 • The report states generic methodological weaknesses or limitations.
+• Realistic improvements to the investigation are stated.
+3–4 • The report describes specific methodological weaknesses or limitations.
+• Realistic improvements to the investigation that are relevant to the identified
+weaknesses or limitations, are described.
+5–6 • The report explains the relative impact of specific methodological weaknesses or
+limitations.
+• Realistic improvements to the investigation, that are relevant to the identified
+weaknesses or limitations, are explained.
+Clarifications for evaluation
+Generic is general to many methodologies and not specifically relevant to the methodology of the
+investigation being evaluated.
+Methodological refers to the overall approach to the investigation of the research question as well as
+procedural steps.
+Weaknesses could relate to issues regarding the control of variables, the precision of measurement or the
+variation in the data.

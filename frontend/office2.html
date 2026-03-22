@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Office 2 — Website Dev Team</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-secondary-fixed": "#001c39",
+            "outline-variant": "#424754",
+            "secondary": "#a4c9ff",
+            "primary-container": "#4d8eff",
+            "inverse-primary": "#005ac2",
+            "on-tertiary-fixed-variant": "#005236",
+            "primary-fixed-dim": "#adc6ff",
+            "on-secondary": "#00315d",
+            "secondary-fixed-dim": "#a4c9ff",
+            "on-error-container": "#ffdad6",
+            "primary": "#adc6ff",
+            "tertiary-fixed-dim": "#4edea3",
+            "on-primary-fixed-variant": "#004395",
+            "tertiary-container": "#00a572",
+            "on-tertiary-fixed": "#002113",
+            "on-primary": "#002e6a",
+            "on-background": "#dae2fd",
+            "surface-variant": "#2d3449",
+            "tertiary-fixed": "#6ffbbe",
+            "on-primary-fixed": "#001a42",
+            "on-tertiary-container": "#00311f",
+            "on-surface-variant": "#c2c6d6",
+            "outline": "#8c909f",
+            "on-secondary-fixed-variant": "#004883",
+            "surface-container-highest": "#2d3449",
+            "on-error": "#690005",
+            "error-container": "#93000a",
+            "surface-container-high": "#222a3d",
+            "surface": "#0b1326",
+            "inverse-on-surface": "#283044",
+            "background": "#0b1326",
+            "secondary-container": "#0267b8",
+            "surface-container-low": "#131b2e",
+            "primary-fixed": "#d8e2ff",
+            "surface-bright": "#31394d",
+            "surface-container": "#171f33",
+            "on-surface": "#dae2fd",
+            "on-tertiary": "#003824",
+            "on-secondary-container": "#d6e5ff",
+            "surface-dim": "#0b1326",
+            "on-primary-container": "#00285d",
+            "surface-tint": "#adc6ff",
+            "secondary-fixed": "#d4e3ff",
+            "inverse-surface": "#dae2fd",
+            "tertiary": "#4edea3",
+            "error": "#ffb4ab",
+            "surface-container-lowest": "#060e20"
+          },
+          fontFamily: {
+            "headline": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+        },
+      },
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0b1326;
+    }
+
+    .glass-effect {
+      background: rgba(45, 52, 73, 0.6);
+      backdrop-filter: blur(12px);
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+
+<body class="bg-surface text-on-surface selection:bg-primary-container/30">
+  <!-- Sidebar Navigation (SideNavBar JSON) -->
+  <aside
+    class="h-screen w-64 fixed left-0 top-0 z-40 bg-[#131b2e] flex flex-col p-4 space-y-2 font-['Inter'] text-sm font-medium">
+    <div class="flex items-center gap-3 px-2 mb-8">
+      <div class="w-10 h-10 bg-primary-container rounded-xl flex items-center justify-center">
+        <span class="material-symbols-outlined text-on-primary-container" data-icon="domain">domain</span>
+      </div>
+      <div>
+        <h2 class="text-lg font-black text-[#dae2fd] tracking-tight">Project Hub</h2>
+        <p class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold">Active Sprint: v4.2</p>
+      </div>
+    </div>
+    <nav class="flex-1 space-y-1">
+      <a class="flex items-center gap-3 px-4 py-3 bg-[#222a3d] text-[#adc6ff] rounded-lg transition-all group" href="#">
+        <span class="material-symbols-outlined" data-icon="domain">domain</span>
+        <span>Main Office</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 text-[#c2c6d6] hover:bg-[#171f33] hover:text-[#dae2fd] rounded-lg transition-all group hover:translate-x-1"
+        href="#">
+        <span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+        <span>Dev Sandbox</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 text-[#c2c6d6] hover:bg-[#171f33] hover:text-[#dae2fd] rounded-lg transition-all group hover:translate-x-1"
+        href="#">
+        <span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+        <span>Client Preview</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 text-[#c2c6d6] hover:bg-[#171f33] hover:text-[#dae2fd] rounded-lg transition-all group hover:translate-x-1"
+        href="#">
+        <span class="material-symbols-outlined" data-icon="Layers">layers</span>
+        <span>Staging</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-3 text-[#c2c6d6] hover:bg-[#171f33] hover:text-[#dae2fd] rounded-lg transition-all group hover:translate-x-1"
+        href="#">
+        <span class="material-symbols-outlined" data-icon="history">history</span>
+        <span>Archive</span>
+      </a>
+    </nav>
+    <div class="mt-auto space-y-1 pt-4">
+      <button
+        class="w-full bg-primary text-on-primary font-bold py-3 rounded-xl mb-4 hover:opacity-90 transition-opacity active:scale-95">
+        New Environment
+      </button>
+      <a class="flex items-center gap-3 px-4 py-2 text-[#c2c6d6] hover:text-[#dae2fd] transition-all" href="#">
+        <span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+        <span>Support</span>
+      </a>
+      <a class="flex items-center gap-3 px-4 py-2 text-[#c2c6d6] hover:text-[#dae2fd] transition-all" href="#">
+        <span class="material-symbols-outlined" data-icon="description">description</span>
+        <span>Docs</span>
+      </a>
+    </div>
+  </aside>
+  <!-- Main Canvas -->
+  <main class="ml-64 min-h-screen">
+    <!-- Top Navigation (TopNavBar JSON) -->
+    <header
+      class="w-full sticky top-0 z-50 bg-[#0b1326] shadow-[0_20px_40px_rgba(6,14,32,0.4)] flex items-center justify-between px-6 py-3 font-['Inter'] tracking-tight antialiased">
+      <div class="flex items-center gap-8">
+        <h1 class="text-xl font-bold tracking-tighter text-[#dae2fd]">Office 2 — Website Dev Team</h1>
+        <nav class="hidden md:flex items-center gap-6">
+          <a class="text-[#adc6ff] border-b-2 border-[#adc6ff] pb-1 text-sm font-semibold" href="#">Dashboard</a>
+          <a class="text-[#c2c6d6] hover:text-[#dae2fd] text-sm font-medium transition-colors" href="#">Team</a>
+          <a class="text-[#c2c6d6] hover:text-[#dae2fd] text-sm font-medium transition-colors" href="#">Assets</a>
+          <a class="text-[#c2c6d6] hover:text-[#dae2fd] text-sm font-medium transition-colors" href="#">Deployments</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <div class="relative group">
+          <span
+            class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-[#222a3d] rounded-full transition-colors cursor-pointer"
+            data-icon="notifications">notifications</span>
+          <span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full ring-2 ring-surface"></span>
+        </div>
+        <span
+          class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-[#222a3d] rounded-full transition-colors cursor-pointer"
+          data-icon="settings">settings</span>
+        <img class="w-9 h-9 rounded-full ring-2 ring-primary/20 cursor-pointer active:scale-95 transition-transform"
+          data-alt="User profile avatar circle crop"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeL_fChZmHhD5CdNx09vE60P2QaDXChLwm2TyXMVrJmTsSkfGmuEft9qRCXMakBvgGfoglcJyO79IdUyesq1m0ZlSfl74fjTf4u-V5CJ6A9dozFAQkhovktVo6PRj3rCUIBmzPhT_wI_ewWvKkyHnJu6YidJTYuSYjQ-EUpVa8HGowVxLwWTggJjp2aY5Yq_A5ys38cbQ028LEgwdvsOxJfxKEsyUc6vPz4FWGaknMfnfs5X66_Xi_fCrJE-lSP4jSe4be_AglEw8" />
+      </div>
+    </header>
+    <!-- Content Area -->
+    <div class="p-8 max-w-[1400px] mx-auto space-y-8">
+      <!-- 1. Manager Agent Card -->
+      <section class="relative overflow-hidden glass-effect p-6 rounded-xl border-l-4 border-primary shadow-2xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div class="flex items-center gap-5">
+            <div class="relative">
+              <img class="w-16 h-16 rounded-xl object-cover ring-2 ring-outline-variant/30"
+                data-alt="Lead Engineering Manager Portrait"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDr2xGxwe5bQeh6ykh7eBKZ2Hlvq9Zj2DuxXB5aCLZi39KCvyKlrsGXpQEcgAmmACSj-0ggkeeBquof_HKN-e5LYl1mhJhUk8A4k1xI5aGpgnnArCHrMA2px_HuTVWzBE-GuKiVW5rB9e2CysQENU6cosynyVLWblEqhnIfQUrT2JpJ8ID81HH-gw9XxTvQhRTHHLysZILUcvpEQEAecd06yQhuNEGhnsobEqGyBwJ16aCfyUtE7vKw0_f8ve6fU8QY43_p7U2LREM" />
+              <div
+                class="absolute -bottom-1 -right-1 w-5 h-5 bg-tertiary rounded-full border-4 border-surface ring-1 ring-tertiary">
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <h3 class="text-xl font-bold text-on-surface">Agent Alpha (Manager)</h3>
+                <span
+                  class="bg-secondary-container text-on-secondary-container text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-widest">Validating</span>
+              </div>
+              <p class="text-on-surface-variant font-medium">System Integrity Lead • Syncing node logs...</p>
+            </div>
+          </div>
+          <div
+            class="bg-surface-container-lowest/50 p-4 rounded-lg flex items-center gap-4 border border-outline-variant/10">
+            <div class="flex flex-col items-end">
+              <span class="text-[10px] text-on-surface-variant uppercase font-bold tracking-widest mb-1">Status
+                Report</span>
+              <span class="text-primary font-bold text-lg">All systems check</span>
+            </div>
+            <div class="h-10 w-[2px] bg-outline-variant/20"></div>
+            <span class="material-symbols-outlined text-tertiary text-3xl" data-icon="verified"
+              style="font-variation-settings: 'FILL' 1;">verified</span>
+          </div>
+        </div>
+        <div class="absolute top-0 right-0 w-64 h-full bg-gradient-to-l from-primary/5 to-transparent"></div>
+      </section>
+      <!-- Grid Layout: Agents & Activity -->
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
+        <!-- 2. Agent Grid (2 columns on large screen) -->
+        <div class="xl:col-span-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Agent Card Template (Repeated 6 times) -->
+          <!-- Card 1: Working -->
+          <div
+            class="bg-surface-container p-5 rounded-xl border border-outline-variant/5 hover:bg-surface-container-high transition-all group hover:-translate-y-1">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-12 h-12 rounded-lg bg-surface-variant flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary" data-icon="smart_toy">smart_toy</span>
+              </div>
+              <span
+                class="text-[10px] px-2 py-1 bg-secondary-container text-on-secondary-container rounded font-black uppercase tracking-widest">Working</span>
+            </div>
+            <h4 class="text-on-surface font-bold mb-1">Agent 01 - Frontend</h4>
+            <p class="text-on-surface-variant text-xs mb-4">Building Hero Component</p>
+            <div class="relative">
+              <input
+                class="w-full bg-surface-container-lowest border-none border-b border-outline-variant focus:ring-0 focus:border-primary text-xs py-2 px-0 transition-all"
+                placeholder="Update task..." type="text" />
+            </div>
+          </div>
+          <!-- Card 2: Idle -->
+          <div
+            class="bg-surface-container p-5 rounded-xl border border-outline-variant/5 hover:bg-surface-container-high transition-all group hover:-translate-y-1">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-12 h-12 rounded-lg bg-surface-variant flex items-center justify-center">
+                <span class="material-symbols-outlined text-outline" data-icon="smart_toy">smart_toy</span>
+              </div>
+              <span
+                class="text-[10px] px-2 py-1 bg-surface-container-highest text-on-surface-variant rounded font-black uppercase tracking-widest">Idle</span>
+            </div>
+            <h4 class="text-on-surface font-bold mb-1">Agent 02 - Backend</h4>
+            <p class="text-on-surface-variant text-xs mb-4">Ready for deployment</p>
+            <div class="relative">
+              <input
+                class="w-full bg-surface-container-lowest border-none border-b border-outline-variant focus:ring-0 focus:border-primary text-xs py-2 px-0 transition-all"
+                placeholder="Update task..." type="text" />
+            </div>
+          </div>
+          <!-- Card 3: Reviewing -->
+          <div
+            class="bg-surface-container p-5 rounded-xl border border-outline-variant/5 hover:bg-surface-container-high transition-all group hover:-translate-y-1">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-12 h-12 rounded-lg bg-surface-variant flex items-center justify-center">
+                <span class="material-symbols-outlined text-tertiary" data-icon="smart_toy">smart_toy</span>
+              </div>
+              <span
+                class="text-[10px] px-2 py-1 bg-tertiary-container text-on-tertiary-container rounded font-black uppercase tracking-widest">Reviewing</span>
+            </div>
+            <h4 class="text-on-surface font-bold mb-1">Agent 03 - QA</h4>
+            <p class="text-on-surface-variant text-xs mb-4">Validating API endpoints</p>
+            <div class="relative">
+              <input
+                class="w-full bg-surface-container-lowest border-none border-b border-outline-variant focus:ring-0 focus:border-primary text-xs py-2 px-0 transition-all"
+                placeholder="Update task..." type="text" />
+            </div>
+          </div>
+          <!-- Card 4: Working -->
+          <div
+            class="bg-surface-container p-5 rounded-xl border border-outline-variant/5 hover:bg-surface-container-high transition-all group hover:-translate-y-1">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-12 h-12 rounded-lg bg-surface-variant flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary" data-icon="smart_toy">smart_toy</span>
+              </div>
+              <span
+                class="text-[10px] px-2 py-1 bg-secondary-container text-on-secondary-container rounded font-black uppercase tracking-widest">Working</span>
+            </div>
+            <h4 class="text-on-surface font-bold mb-1">Agent 04 - Designer</h4>
+            <p class="text-on-surface-variant text-xs mb-4">Exporting SVG assets</p>
+            <div class="relative">
+              <input
+                class="w-full bg-surface-container-lowest border-none border-b border-outline-variant focus:ring-0 focus:border-primary text-xs py-2 px-0 transition-all"
+                placeholder="Update task..." type="text" />
+            </div>
+          </div>
+          <!-- Card 5: Idle -->
+          <div
+            class="bg-surface-container p-5 rounded-xl border border-outline-variant/5 hover:bg-surface-container-high transition-all group hover:-translate-y-1">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-12 h-12 rounded-lg bg-surface-variant flex items-center justify-center">
+                <span class="material-symbols-outlined text-outline" data-icon="smart_toy">smart_toy</span>
+              </div>
+              <span
+                class="text-[10px] px-2 py-1 bg-surface-container-highest text-on-surface-variant rounded font-black uppercase tracking-widest">Idle</span>
+            </div>
+            <h4 class="text-on-surface font-bold mb-1">Agent 05 - DevOps</h4>
+            <p class="text-on-surface-variant text-xs mb-4">Pipeline optimization</p>
+            <div class="relative">
+              <input
+                class="w-full bg-surface-container-lowest border-none border-b border-outline-variant focus:ring-0 focus:border-primary text-xs py-2 px-0 transition-all"
+                placeholder="Update task..." type="text" />
+            </div>
+          </div>
+          <!-- Card 6: Reviewing -->
+          <div
+            class="bg-surface-container p-5 rounded-xl border border-outline-variant/5 hover:bg-surface-container-high transition-all group hover:-translate-y-1">
+            <div class="flex justify-between items-start mb-4">
+              <div class="w-12 h-12 rounded-lg bg-surface-variant flex items-center justify-center">
+                <span class="material-symbols-outlined text-tertiary" data-icon="smart_toy">smart_toy</span>
+              </div>
+              <span
+                class="text-[10px] px-2 py-1 bg-tertiary-container text-on-tertiary-container rounded font-black uppercase tracking-widest">Reviewing</span>
+            </div>
+            <h4 class="text-on-surface font-bold mb-1">Agent 06 - Security</h4>
+            <p class="text-on-surface-variant text-xs mb-4">Auditing auth flow</p>
+            <div class="relative">
+              <input
+                class="w-full bg-surface-container-lowest border-none border-b border-outline-variant focus:ring-0 focus:border-primary text-xs py-2 px-0 transition-all"
+                placeholder="Update task..." type="text" />
+            </div>
+          </div>
+        </div>
+        <!-- 3. Central Activity Feed -->
+        <aside class="bg-surface-container-low p-6 rounded-2xl shadow-inner border border-outline-variant/5">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-sm font-black uppercase tracking-[0.2em] text-[#dae2fd]">Live Protocol Feed</h3>
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-tertiary opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-tertiary"></span>
+            </span>
+          </div>
+          <div class="space-y-6">
+            <!-- Feed Item 1 -->
+            <div class="flex gap-4 group">
+              <div class="flex flex-col items-center">
+                <div class="w-2 h-2 rounded-full bg-primary-container ring-4 ring-primary-container/20"></div>
+                <div class="w-[1px] h-full bg-outline-variant/20 mt-2"></div>
+              </div>
+              <div class="pb-1">
+                <p class="text-xs text-on-surface leading-relaxed">
+                  <span class="font-bold text-primary">Agent 01</span> pushed code to <code
+                    class="bg-surface-variant px-1 rounded text-[10px]">feature/nav-redesign</code>
+                </p>
+                <span class="text-[10px] text-on-surface-variant/60 font-medium">02m ago • Commit ID: 77a1bc</span>
+              </div>
+            </div>
+            <!-- Feed Item 2 -->
+            <div class="flex gap-4 group">
+              <div class="flex flex-col items-center">
+                <div class="w-2 h-2 rounded-full bg-tertiary ring-4 ring-tertiary/20"></div>
+                <div class="w-[1px] h-full bg-outline-variant/20 mt-2"></div>
+              </div>
+              <div class="pb-1">
+                <p class="text-xs text-on-surface leading-relaxed">
+                  <span class="font-bold text-tertiary">Agent 03</span> reviewed PR from <span
+                    class="text-on-surface-variant">Agent 04</span>
+                </p>
+                <span class="text-[10px] text-on-surface-variant/60 font-medium">14m ago • Approved</span>
+              </div>
+            </div>
+            <!-- Feed Item 3 -->
+            <div class="flex gap-4 group">
+              <div class="flex flex-col items-center">
+                <div class="w-2 h-2 rounded-full bg-outline-variant ring-4 ring-outline-variant/20"></div>
+                <div class="w-[1px] h-full bg-outline-variant/20 mt-2"></div>
+              </div>
+              <div class="pb-1">
+                <p class="text-xs text-on-surface leading-relaxed">
+                  <span class="font-bold text-on-surface">Agent 05</span> initiated container rebuild
+                </p>
+                <span class="text-[10px] text-on-surface-variant/60 font-medium">28m ago • Environment: Staging</span>
+              </div>
+            </div>
+            <!-- Feed Item 4 -->
+            <div class="flex gap-4 group">
+              <div class="flex flex-col items-center">
+                <div class="w-2 h-2 rounded-full bg-primary-container ring-4 ring-primary-container/20"></div>
+                <div class="w-[1px] h-full bg-outline-variant/20 mt-2"></div>
+              </div>
+              <div class="pb-1">
+                <p class="text-xs text-on-surface leading-relaxed">
+                  <span class="font-bold text-primary">Agent 01</span> updated task input: "Finalizing responsive fix"
+                </p>
+                <span class="text-[10px] text-on-surface-variant/60 font-medium">45m ago • Manual Override</span>
+              </div>
+            </div>
+            <!-- Feed Item 5 -->
+            <div class="flex gap-4 group">
+              <div class="flex flex-col items-center">
+                <div class="w-2 h-2 rounded-full bg-tertiary ring-4 ring-tertiary/20"></div>
+              </div>
+              <div class="pb-1">
+                <p class="text-xs text-on-surface leading-relaxed">
+                  <span class="font-bold text-tertiary">Alpha Manager</span> validated build #902
+                </p>
+                <span class="text-[10px] text-on-surface-variant/60 font-medium">1h ago • Status: Success</span>
+              </div>
+            </div>
+          </div>
+          <button
+            class="w-full mt-8 py-2 text-[10px] font-black uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors">
+            View Full Logs
+          </button>
+        </aside>
+      </div>
+    </div>
+  </main>
+  <!-- Floating Action (Suppressed as per rules on detail/dashboard mix) -->
+  <!-- Navigation Shell handled by Sidebar and Header -->
+</body>
+
+</html>

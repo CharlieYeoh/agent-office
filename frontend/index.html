@@ -225,6 +225,32 @@
       color: var(--muted);
       margin: 0;
     }
+
+    .office-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+    .office-nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-soft);
+      background: var(--surface);
+      color: var(--accent);
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 1px 2px var(--shadow);
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .office-nav a:hover {
+      border-color: var(--accent);
+      background: var(--bg);
+    }
   </style>
 </head>
 <body>
@@ -238,6 +264,11 @@
         <span id="theme-toggle-label">Dark</span>
       </button>
     </header>
+
+    <nav class="office-nav" aria-label="Offices">
+      <a href="/office1">📚 Office 1 — Homework</a>
+      <a href="/office2">💻 Office 2 — Website Team</a>
+    </nav>
 
     <div class="dashboard">
       <main class="main-panel">

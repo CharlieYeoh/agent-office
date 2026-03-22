@@ -1,0 +1,118 @@
+IB Computer Science HL – Marking Criteria
+=======================================
+
+Criterion A: Planning - 6 points
+This criterion assesses the 3 components: the scenario, the rationale for the proposed solution, and the success criteria. The scenario describes who is the client, is their choice appropriate and what is the reason for developing the product. The rationale must be in extended writing and justify why this specific product is an effective solution to the issue. Lastly, the success criteria, listed in the form of bullet points, will be further used for evaluating the product. They must be measurable, rational and must address the reasons for developing the solution. 
+ 
+
+For a maximum of 6 points: 
+
+An appropriate scenario for investigation for an identified client is described. 
+
+There is evidence of a consultation with a client or advisor. 
+
+The choice of the proposed product is justified. 
+
+The student includes a range of appropriate criteria for evaluating the success of the product.
+
+
+Here is a well executed Planning. 
+
+
+Criterion B: Solution overview - 6 points 
+A Record of tasks form in the zip file must be used for the product proposed in criterion A. This part addresses the chronology of the key events in planning, designing, developing, testing, and implementing the solution. It should also include any issues that may arise and affect its development. The second section - the design overview should consist of different levels of draft design, such as the overall structure and the internal layout of the product itself, and investigation into specific elements used within the product (such as classes, sub-classes, tables, queries, style sheets, graphic elements, effects). Make sure that the design methodologies are suitable for this type of product and don’t forget about addressing the main functionalities in the testing plan. 
+
+For a maximum of 6 points: 
+
+The record of tasks and the design overview are detailed and complete.
+
+The record of tasks and design overview refer to the product proposed in criterion A.  
+
+The student includes an outline test plan. 
+
+It is clear how the product was developed.
+
+The main functionalities of the product are considered. 
+
+
+Check out a good record of tasks here. 
+
+ 
+Check out our free Computer Science IA exemplars
+View all exemplars on Clastify
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Criterion C: Development - 12 points 
+List and justify the use of all the techniques utilized in developing the product. They may include for instance algorithmic thinking, data structures, software tools, and user interface. The exemplary tools are code libraries, software packages, web hosting, security information or infrastructure issues - also explain why are they adequate in this specific case.  Apart from describing the tools and techniques, the development must also use extended writing, to explain the structure of the product and why is it appropriate. Any reference material such as templates, program code, screenshots, applets or other materials that have been used or modified must be acknowledged in this criterion. The code used in the product can be included in the appendix.
+
+For a maximum of 12 points:
+
+The use of techniques demonstrates a high level of complexity and ingenuity in addressing the scenario identified in criterion A. 
+
+There is evidence of algorithmic thinking.  
+
+Existing tools are adequately used for the development. 
+
+The student chooses appropriate techniques and explains their usage.
+
+Screenshots are provided along with the explanation. 
+
+All sources are identified.
+
+The product is compatible with the information in Criterion A and B.
+
+
+See this for inspiration. 
+
+
+Criterion D:  Functionality and extensibility of product - 4 points
+For this criterion, you must use a video to showcase the product's functioning. It should be designed in a way that enables another party to maintain it. Thus it should have appropriate folder and data structures, intuitive file or class naming conventions, and, where appropriate, comments in the code. This part does not require any written documentation. 
+ 
+
+For a maximum of 4 points: 
+
+The video shows that the product functions well. 
+
+Some expansion and modifications of the product are straightforward. 
+
+The design enables another party to maintain it. 
+
+ 
+
+Criterion E: Evaluation - 6 points 
+In the end, you should use the success criteria and the obtained feedback to evaluate your solution. Based on this assessment, recommend future developments and explain how will they benefit the solution. 
+ 
+
+For a maximum of 6 points: 
+
+The product is fully evaluated against the success criteria identified in criterion A. 
+
+The evaluation includes feedback from the client/adviser. 
+
+Recommendations for further improvement of the product are realistic and explained. 

@@ -1,0 +1,237 @@
+IB Mathematics Analysis & Approaches Higher Level – Marking Criteria
+=====================================================================
+
+Internal assessment criteria—SL and HL
+The exploration is internally assessed by the teacher and externally moderated by the IB using
+assessment criteria that relate to the objectives for mathematics.
+Each exploration is assessed against the following five criteria. The final mark for each
+exploration is the sum of the scores for each criterion. The maximum possible final mark is 20.
+Students will not receive a grade for their mathematics course if they have not submitted an
+exploration.
+Criterion A Presentation
+Criterion B Mathematical communication
+Criterion C Personal engagement
+Criterion D Reflection
+Criterion E Use of mathematics
+Criterion A: Presentation
+Achievement
+level
+Descriptor
+0 The exploration does not reach the standard described by the descriptors
+below.
+1 The exploration has some coherence or some organization.
+2 The exploration has some coherence and shows some organization.
+3 The exploration is coherent and well organized.
+4 The exploration is coherent, well organized, and concise.
+The “presentation” criterion assesses the organization and coherence of the exploration.
+A coherent exploration is logically developed, easy to follow and meets its aim. This refers to
+the overall structure or framework, including introduction, body, conclusion and how well the
+different parts link to each other.
+A well-organized exploration includes an introduction, describes the aim of the exploration
+and has a conclusion. Relevant graphs, tables and diagrams should accompany the work in the
+appropriate place and not be attached as appendices to the document. Appendices should be
+used to include information on large data sets, additional graphs, diagrams and tables.
+A concise exploration does not show irrelevant or unnecessary repetitive calculations, graphs
+or descriptions.
+The use of technology is not required but encouraged where appropriate. However, the use of
+analytic approaches rather than technological ones does not necessarily mean lack of
+conciseness, and should not be penalized. This does not mean that repetitive calculations are
+condoned.
+Criterion B: Mathematical communication
+Achievement
+level
+Descriptor
+1 Mathematics: analysis and approaches guide
+0 The exploration does not reach the standard described by the descriptors
+below.
+1 The exploration contains some relevant mathematical communication
+which is partially appropriate.
+2 The exploration contains some relevant appropriate mathematical
+communication.
+3 The mathematical communication is relevant, appropriate and is mostly
+consistent.
+4 The mathematical communication is relevant, appropriate and consistent
+throughout.
+The “mathematical communication” criterion assesses to what extent the student has:
+• used appropriate mathematical language (notation, symbols, terminology). Calculator
+and computer notation is acceptable only if it is software generated. Otherwise it is
+expected that students use appropriate mathematical notation in their work
+• defined key terms and variables, where required
+• used multiple forms of mathematical representation, such as formulae, diagrams, tables,
+charts, graphs and models, where appropriate
+• used a deductive method and set out proofs logically where appropriate
+Examples of level 1 can include graphs not being labelled, consistent use of computer notation
+with no other forms of correct mathematical communication.
+Level 4 can be achieved by using only one form of mathematical representation as long as this
+is appropriate to the topic being explored. For level 4, any minor errors that do not impair clear
+communication should not be penalizsed.
+Criterion C: Personal engagement
+Achievement
+level
+Descriptor
+0 The exploration does not reach the standard described by the descriptors
+below.
+1 There is evidence of some personal engagement.
+2 There is evidence of significant personal engagement.
+3 There is evidence of outstanding personal engagement.
+The “personal engagement” criterion assesses the extent to which the student engages with
+the topic by exploring the mathematics and making it their own. It is not a measure of effort.
+Personal engagement may be recognized in different ways. These include thinking
+independently or creatively, presenting mathematical ideas in their own way, exploring the
+topic from different perspectives, making and testing predictions. Further (but not exhaustive)
+examples of personal engagement at different levels are given in the teacher support material
+(TSM).
+There must be evidence of personal engagement demonstrated in the student’s work. It is not
+sufficient that a teacher comments that a student was highly engaged.
+Textbook style explorations or reproduction of readily available mathematics without the
+candidate’s own perspective are unlikely to achieve the higher levels.
+Mathematics: analysis and approaches guide 2
+Significant: The student demonstrates authentic personal engagement in the exploration on a
+few occasions and it is evident that these drive the exploration forward and help the reader to
+better understand the writer’s intentions.
+Outstanding: The student demonstrates authentic personal engagement in the exploration in
+numerous instances and they are of a high quality. It is evident that these drive the exploration
+forward in a creative way. It leaves the impression that the student has developed, through
+their approach, a complete understanding of the context of the exploration topic and the
+reader better understands the writer’s intentions.
+Criterion D: Reflection
+Achievement
+level
+Descriptor
+0 The exploration does not reach the standard described by the
+descriptors below.
+1 There is evidence of limited reflection.
+2 There is evidence of meaningful reflection.
+3 There is substantial evidence of critical reflection.
+The “reflection” criterion assesses how the student reviews, analyses and evaluates the
+exploration. Although reflection may be seen in the conclusion to the exploration, it may also
+be found throughout the exploration.
+Simply describing results represents limited reflection. Further consideration is required to
+achieve the higher levels.
+Some ways of showing meaningful reflection are: linking to the aims of the exploration,
+commenting on what they have learned, considering some limitation or comparing different
+mathematical approaches.
+Critical reflection is reflection that is crucial, deciding or deeply insightful. It will often develop
+the exploration by addressing the mathematical results and their impact on the student’s
+understanding of the topic. Some ways of showing critical reflection are: considering what
+next, discussing implications of results, discussing strengths and weaknesses of approaches,
+and considering different perspectives.
+Substantial evidence means that the critical reflection is present throughout the exploration. If
+it appears at the end of the exploration it must be of high quality and demonstrate how it
+developed the exploration in order to achieve a level 3.
+Further (but not exhaustive) examples of reflection at different levels are given in the teacher
+support material (TSM).
+Criterion E: Use of mathematics—SL
+Achievement
+level
+Descriptor
+0 The exploration does not reach the standard described by the descriptors
+below.
+1 Some relevant mathematics is used.
+2 Some relevant mathematics is used. Limited understanding is
+Mathematics: analysis and approaches guide 3
+demonstrated.
+3 Relevant mathematics commensurate with the level of the course is used.
+Limited understanding is demonstrated.
+Achievement
+level
+Descriptor
+4 Relevant mathematics commensurate with the level of the course is used.
+The mathematics explored is partially correct. Some knowledge and
+understanding are demonstrated.
+5 Relevant mathematics commensurate with the level of the course is used.
+The mathematics explored is mostly correct. Good knowledge and
+understanding are demonstrated.
+6 Relevant mathematics commensurate with the level of the course is used.
+The mathematics explored is correct. Thorough knowledge and
+understanding are demonstrated.
+The “Use of mathematics” SL criterion assesses to what extent students use mathematics that
+is relevant to the exploration.
+Relevant refers to mathematics that supports the development of the exploration towards the
+completion of its aim. Overly complicated mathematics where simple mathematics would
+suffice is not relevant. Students are expected to produce work that is commensurate with the
+level of the course, which means it should not be completely based on mathematics listed in
+the prior learning. The mathematics explored should either be part of the syllabus, or at a
+similar level.
+A key word in the descriptor is demonstrated. The command term demonstrate means “to
+make clear by reasoning or evidence, illustrating with examples or practical application”.
+Obtaining the correct answer is not sufficient to demonstrate understanding (even some
+understanding) in order to achieve level 2 or higher.
+For knowledge and understanding to be thorough it must be demonstrated throughout.
+The mathematics can be regarded as correct even if there are occasional minor errors as long
+as they do not detract from the flow of the mathematics or lead to an unreasonable outcome.
+Students are encouraged to use technology to obtain results where appropriate, but
+understanding must be demonstrated in order for the student to achieve higher than level 1,
+for example merely substituting values into a formula does not necessarily demonstrate
+understanding of the results.
+The mathematics only needs to be what is required to support the development of the
+exploration. This could be a few small elements of mathematics or even a single topic (or subtopic) from the syllabus. It is better to do a few things well than a lot of things not so well. If
+the mathematics used is relevant to the topic being explored, commensurate with the level of
+the course and understood by the student, then it can achieve a high level in this criterion.
+Criterion E: Use of mathematics—HL
+Achievement
+level
+Descriptor
+0 The exploration does not reach the standard described by the descriptors
+below.
+1 Some relevant mathematics is used. Limited understanding is
+demonstrated.
+Mathematics: analysis and approaches guide 4
+2 Some relevant mathematics is used. The mathematics explored is partially
+correct. Some knowledge and understanding is demonstrated.
+3 Relevant mathematics commensurate with the level of the course is used.
+The mathematics explored is correct. Some knowledge and understanding
+are demonstrated.
+Achievement
+level
+Descriptor
+4 Relevant mathematics commensurate with the level of the course is used.
+The mathematics explored is correct. Good knowledge and understanding
+are demonstrated.
+5 Relevant mathematics commensurate with the level of the course is used.
+The mathematics explored is correct and demonstrates sophistication or
+rigour. Thorough knowledge and understanding are demonstrated.
+6 Relevant mathematics commensurate with the level of the course is used.
+The mathematics explored is precise and demonstrates sophistication and
+rigour.
+Thorough knowledge and understanding are demonstrated.
+The “Use of mathematics” HL criterion assesses to what extent students use relevant
+mathematics in the exploration.
+Students are expected to produce work that is commensurate with the level of the course,
+which means it should not be completely based on mathematics listed in the prior learning.
+The mathematics explored should either be part of the syllabus, at a similar level or slightly
+beyond. However, mathematics of a level slightly beyond the syllabus is not required to
+achieve the highest levels.
+A key word in the descriptor is demonstrated. The command term demonstrate means to
+make clear by reasoning or evidence, illustrating with examples or practical application.
+Obtaining the correct answer is not sufficient to demonstrate understanding (even some
+understanding) in order to achieve level 2 or higher.
+For knowledge and understanding to be thorough it must be demonstrated throughout. Lines
+of reasoning must be shown to justify steps in the mathematical development of the
+exploration.
+Relevant refers to mathematics that supports the development of the exploration towards the
+completion of its aim. Overly complicated mathematics where simple mathematics would
+suffice is not relevant.
+The mathematics can be regarded as correct even if there are occasional minor errors as long
+as they do not detract from the flow of the mathematics or lead to an unreasonable outcome.
+Precise mathematics is error-free and uses an appropriate level of accuracy at all times.
+Sophistication: To be considered as sophisticated the mathematics used should be
+commensurate with the HL syllabus or, if contained in the SL syllabus, the mathematics has
+been used in a complex way that is beyond what could reasonably be expected of an SL
+student. Sophistication in mathematics may include understanding and using challenging
+mathematical concepts, looking at a problem from different perspectives and seeing
+underlying structures to link different areas of mathematics.
+Rigour involves clarity of logic and language when making mathematical arguments and
+calculations. Mathematical claims relevant to the development of the exploration must be
+justified or proven.
+Mathematics: analysis and approaches guide 5
+Students are encouraged to use technology to obtain results where appropriate, but
+understanding must be demonstrated in order for the student to achieve level 1 or higher, for
+example merely substituting values into a formula does not necessarily demonstrate
+understanding of the results.
+The mathematics only needs to be what is required to support the development of the
+exploration. This could be a few small elements of mathematics or even a single topic (or subtopic) from the syllabus. It is better to do a few things well than a lot of things not so well. If
+the mathematics used is relevant to the topic being explored, commensurate with the level of
+the course and understood by the student, then it can achieve a high level in this criterion
+Mathematics: analysis and approaches guide 6
+Mathematics: analysis and approaches guide 7
