@@ -71,23 +71,29 @@ def save_memory(agent_name: str, task: str, result: str,
 
 
 def search_memories(agent_name: str, query: str, limit: int = 5) -> list[dict]:
-    """
-    Full-text search through an agent's past tasks and results.
-    Returns a list of relevant memory dicts.
-    """
+    """Full-text search through an agent's past tasks and results."""
     init_db()
-    with _connect() as conn:
-        rows = conn.execute(
-            """SELECT m.id, m.task, m.result, m.summary, m.tags, m.created_at
-               FROM memories m
-               JOIN memories_fts fts ON fts.rowid = m.id
-               WHERE m.agent_name = ?
-                 AND memories_fts MATCH ?
-               ORDER BY rank
-               LIMIT ?""",
-            (agent_name, query, limit)
-        ).fetchall()
-        return [dict(r) for r in rows]
+    # FTS5 chokes on special characters — sanitize by keeping only words
+    import re
+    clean_query = " ".join(re.findall(r'\w+', query))[:200]
+    if not clean_query:
+        return get_recent_memories(agent_name, limit)
+    try:
+        with _connect() as conn:
+            rows = conn.execute(
+                """SELECT m.id, m.task, m.result, m.summary, m.tags, m.created_at
+                   FROM memories m
+                   JOIN memories_fts fts ON fts.rowid = m.id
+                   WHERE m.agent_name = ?
+                     AND memories_fts MATCH ?
+                   ORDER BY rank
+                   LIMIT ?""",
+                (agent_name, clean_query, limit)
+            ).fetchall()
+            return [dict(r) for r in rows]
+    except Exception:
+        # Fall back to recent memories if search fails
+        return get_recent_memories(agent_name, limit)
 
 
 def get_recent_memories(agent_name: str, limit: int = 5) -> list[dict]:

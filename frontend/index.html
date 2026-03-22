@@ -1,274 +1,643 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Agent Office</title>
   <style>
     :root {
-      --bg: #f8fafc; --surface: #fff; --text: #1e293b; --muted: #64748b;
-      --label: #475569; --border: #cbd5e1; --border-soft: #e2e8f0;
-      --accent: #1a56db; --accent-hover: #1648c0; --accent-disabled: #93c5fd;
-      --success-bg: #f0fdf4; --success-text: #15803d;
-      --error-bg: #fef2f2; --error-text: #dc2626;
-      --shadow: rgba(15,23,42,0.06); --shadow-md: rgba(15,23,42,0.12);
+      --bg: #f8fafc;
+      --surface: #fff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --label: #475569;
+      --border: #cbd5e1;
+      --border-soft: #e2e8f0;
+      --accent: #1a56db;
+      --accent-hover: #1648c0;
+      --accent-light: #dce8ff;
+      --error-bg: #fef2f2;
+      --error-text: #dc2626;
+      --success-bg: #f0fdf4;
+      --success-text: #15803d;
+      --shadow: rgba(15, 23, 42, .06);
+      --shadow-md: rgba(15, 23, 42, .12);
+      --amber: #92400e;
+      --amber-bg: #fffbeb;
     }
-    [data-theme="dark"] {
-      --bg: #0f172a; --surface: #1e293b; --text: #f1f5f9; --muted: #94a3b8;
-      --label: #cbd5e1; --border: #475569; --border-soft: #334155;
-      --accent: #3b82f6; --accent-hover: #2563eb; --accent-disabled: #1e3a5f;
-      --success-bg: #052e16; --success-text: #86efac;
-      --error-bg: #450a0a; --error-text: #fca5a5;
-      --shadow: rgba(0,0,0,0.3); --shadow-md: rgba(0,0,0,0.5);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background .2s, color .2s; }
 
-    /* Layout */
-    .shell { display: flex; min-height: 100vh; }
-    .sidebar { width: 240px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border-soft); display: flex; flex-direction: column; padding: 1.5rem 0; position: fixed; top: 0; left: 0; height: 100vh; z-index: 40; }
-    .content { margin-left: 240px; flex: 1; min-width: 0; }
-    .topbar { background: var(--surface); border-bottom: 1px solid var(--border-soft); padding: 0.875rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 30; }
-    .page { padding: 2rem; max-width: 900px; }
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --label: #cbd5e1;
+      --border: #475569;
+      --border-soft: #334155;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --accent-light: #1e3a5f;
+      --error-bg: #450a0a;
+      --error-text: #fca5a5;
+      --success-bg: #052e16;
+      --success-text: #86efac;
+      --shadow: rgba(0, 0, 0, .3);
+      --shadow-md: rgba(0, 0, 0, .5);
+      --amber: #fcd34d;
+      --amber-bg: #2a1a00;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      transition: background .2s, color .2s;
+    }
+
+    .shell {
+      display: flex;
+      min-height: 100vh;
+    }
 
     /* Sidebar */
-    .sidebar-logo { padding: 0 1.25rem 1.5rem; border-bottom: 1px solid var(--border-soft); margin-bottom: 1rem; }
-    .sidebar-logo h1 { font-size: 1.1rem; font-weight: 700; }
-    .sidebar-logo p { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
-    .nav-section { padding: 0.5rem 0; }
-    .nav-label { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 0 1.25rem; margin-bottom: 0.4rem; }
-    .nav-link { display: flex; align-items: center; gap: 0.65rem; padding: 0.55rem 1.25rem; font-size: 0.875rem; font-weight: 500; color: var(--muted); text-decoration: none; border-radius: 0; transition: background .15s, color .15s; cursor: pointer; border: none; background: none; width: 100%; text-align: left; }
-    .nav-link:hover { background: var(--bg); color: var(--text); }
-    .nav-link.active { background: var(--bg); color: var(--accent); font-weight: 600; border-right: 2px solid var(--accent); }
-    .nav-icon { font-size: 1rem; width: 18px; text-align: center; }
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      padding: 1.25rem 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 40;
+    }
 
-    /* Topbar */
-    .topbar-title { font-size: 0.95rem; font-weight: 600; }
-    .topbar-actions { display: flex; align-items: center; gap: 0.75rem; }
-    .icon-btn { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.5rem 0.85rem; background: var(--surface); color: var(--text); border: 1px solid var(--border-soft); border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
-    .icon-btn:hover { border-color: var(--border); }
+    .sidebar-logo {
+      padding: .75rem 1.25rem 1rem;
+      border-bottom: 1px solid var(--border-soft);
+      margin-bottom: .75rem;
+    }
 
-    /* Cards */
-    .card { background: var(--surface); border: 1px solid var(--border-soft); border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px var(--shadow); }
-    .card + .card { margin-top: 1.25rem; }
+    .sidebar-logo h1 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
 
-    /* Office nav cards */
-    .office-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-    .office-card { background: var(--surface); border: 1px solid var(--border-soft); border-radius: 12px; padding: 1.5rem; text-decoration: none; color: var(--text); box-shadow: 0 1px 3px var(--shadow); transition: box-shadow .15s, border-color .15s, transform .15s; display: block; }
-    .office-card:hover { box-shadow: 0 4px 12px var(--shadow-md); border-color: var(--accent); transform: translateY(-1px); }
-    .office-card-icon { font-size: 2rem; margin-bottom: 0.75rem; }
-    .office-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
-    .office-card p { font-size: 0.825rem; color: var(--muted); line-height: 1.5; }
-    .office-card-meta { margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .tag { font-size: 0.7rem; padding: 2px 8px; border-radius: 99px; background: var(--bg); border: 1px solid var(--border-soft); color: var(--muted); font-weight: 500; }
+    .sidebar-logo p {
+      font-size: .7rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
 
-    /* Form */
-    label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--label); margin-bottom: 0.4rem; margin-top: 1.1rem; }
-    label:first-of-type { margin-top: 0; }
-    select, textarea, input[type=text] { width: 100%; padding: 0.6rem 0.8rem; border-radius: 8px; border: 1px solid var(--border); font-size: 0.9rem; font-family: inherit; background: var(--surface); color: var(--text); }
-    textarea { min-height: 110px; resize: vertical; }
-    select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+    .nav-section-label {
+      font-size: .62rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      padding: .75rem 1.25rem .3rem;
+      opacity: .6;
+    }
 
-    .run-btn { margin-top: 1rem; padding: 0.7rem 1.5rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; width: 100%; transition: background .15s; }
-    .run-btn:hover:not(:disabled) { background: var(--accent-hover); }
-    .run-btn:disabled { background: var(--accent-disabled); cursor: not-allowed; }
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .5rem 1.25rem;
+      font-size: .825rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: background .12s, color .12s;
+    }
 
-    /* Result */
-    .result-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 1.25rem 0 0.5rem; }
-    .result-box { background: var(--bg); border: 1px solid var(--border-soft); border-radius: 10px; padding: 1.1rem; white-space: pre-wrap; line-height: 1.7; min-height: 80px; font-size: 0.875rem; }
-    .result-box.error { background: var(--error-bg); color: var(--error-text); }
-    .result-box.loading { color: var(--muted); display: flex; align-items: center; gap: 0.75rem; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner { width: 18px; height: 18px; border: 2px solid var(--border-soft); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
+    .nav-link:hover {
+      background: var(--bg);
+      color: var(--text);
+    }
 
-    /* History */
-    .history-item { padding: 0.65rem 0.75rem; border-radius: 8px; background: var(--bg); border: 1px solid var(--border-soft); font-size: 0.78rem; margin-bottom: 0.5rem; }
-    .history-item:last-child { margin-bottom: 0; }
-    .history-item.fail { border-left: 3px solid var(--error-text); }
-    .history-meta { display: flex; gap: 0.5rem; align-items: baseline; margin-bottom: 0.25rem; }
-    .history-agent { font-weight: 700; font-size: 0.75rem; text-transform: capitalize; }
-    .history-time { font-size: 0.7rem; color: var(--muted); }
-    .history-task { color: var(--muted); line-height: 1.4; }
+    .nav-link.active {
+      color: var(--accent);
+      background: var(--accent-light);
+      border-right: 2px solid var(--accent);
+      font-weight: 600;
+    }
 
-    /* Two column layout */
-    .two-col { display: grid; gap: 1.5rem; }
-    @media (min-width: 700px) { .two-col { grid-template-columns: 1fr 260px; align-items: start; } }
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--border-soft);
+    }
+
+    .theme-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: .35rem .7rem;
+      font-size: .75rem;
+      cursor: pointer;
+      color: var(--muted);
+      width: 100%;
+    }
+
+    /* Content */
+    .content {
+      margin-left: 220px;
+      flex: 1;
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border-soft);
+      padding: .75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .topbar-title {
+      font-size: .95rem;
+      font-weight: 600;
+    }
+
+    .page {
+      padding: 2rem 2.5rem;
+      max-width: 800px;
+    }
 
     /* Page header */
-    .page-header { margin-bottom: 1.75rem; }
-    .page-header h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; }
-    .page-header p { color: var(--muted); font-size: 0.875rem; }
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .page-header h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: .3rem;
+    }
+
+    .page-header p {
+      color: var(--muted);
+      font-size: .875rem;
+    }
+
+    /* Office cards */
+    .office-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .office-card {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-decoration: none;
+      color: var(--text);
+      box-shadow: 0 1px 3px var(--shadow);
+      transition: box-shadow .15s, border-color .15s, transform .15s;
+      display: block;
+    }
+
+    .office-card:hover {
+      box-shadow: 0 4px 12px var(--shadow-md);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .office-card-icon {
+      font-size: 1.75rem;
+      margin-bottom: .75rem;
+    }
+
+    .office-card h3 {
+      font-size: .95rem;
+      font-weight: 700;
+      margin-bottom: .3rem;
+    }
+
+    .office-card p {
+      font-size: .8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .office-card-tags {
+      margin-top: .75rem;
+      display: flex;
+      gap: .4rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      font-size: .68rem;
+      padding: 2px 7px;
+      border-radius: 99px;
+      background: var(--bg);
+      border: 1px solid var(--border-soft);
+      color: var(--muted);
+    }
+
+    /* Manager card */
+    .manager-card {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 14px;
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px var(--shadow);
+      margin-bottom: 2rem;
+    }
+
+    .manager-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .manager-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      border: 1px solid var(--border-soft);
+    }
+
+    .manager-name {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .manager-role {
+      font-size: .775rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .manager-desc {
+      font-size: .825rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+      background: var(--bg);
+      border-radius: 8px;
+      padding: .85rem 1rem;
+      border: 1px solid var(--border-soft);
+    }
+
+    /* Task form */
+    label {
+      display: block;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--label);
+      margin-bottom: .4rem;
+      margin-top: 1rem;
+    }
+
+    label:first-of-type {
+      margin-top: 0;
+    }
+
+    textarea {
+      width: 100%;
+      padding: .65rem .85rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      font-size: .875rem;
+      font-family: inherit;
+      background: var(--surface);
+      color: var(--text);
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    textarea:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: -1px;
+    }
+
+    .run-btn {
+      margin-top: .85rem;
+      padding: .65rem 1.5rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: .875rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background .15s;
+    }
+
+    .run-btn:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    .run-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    /* Result */
+    .result-section {
+      margin-top: 1.25rem;
+    }
+
+    .result-label {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+
+    .result-box {
+      background: var(--bg);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 1.1rem;
+      white-space: pre-wrap;
+      line-height: 1.7;
+      min-height: 60px;
+      font-size: .85rem;
+    }
+
+    .result-box.error {
+      background: var(--error-bg);
+      color: var(--error-text);
+    }
+
+    .result-box.loading {
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: .65rem;
+    }
+
+    .result-box.success {
+      background: var(--success-bg);
+    }
+
+    /* Validation badge */
+    .validation-row {
+      margin-top: .65rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .75rem;
+    }
+
+    .val-pass {
+      color: var(--success-text);
+      font-weight: 600;
+    }
+
+    .val-fail {
+      color: var(--error-text);
+      font-weight: 600;
+    }
+
+    .val-score {
+      color: var(--muted);
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid var(--border-soft);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      flex-shrink: 0;
+    }
 
     @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .content { margin-left: 0; }
-      .page { padding: 1rem; }
+      .sidebar {
+        display: none;
+      }
+
+      .content {
+        margin-left: 0;
+      }
+
+      .page {
+        padding: 1rem;
+      }
     }
   </style>
 </head>
+
 <body>
-<div class="shell">
-  <aside class="sidebar">
-    <div class="sidebar-logo">
-      <h1>Agent Office</h1>
-      <p>Your AI workspace</p>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">Main</div>
-      <a class="nav-link active" href="/"><span class="nav-icon">⌂</span> Dashboard</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-label">Offices</div>
-      <a class="nav-link" href="/office1"><span class="nav-icon">📚</span> Homework</a>
-      <a class="nav-link" href="/office2"><span class="nav-icon">💻</span> Website Team</a>
-    </div>
-    <div class="nav-section" style="margin-top:auto; padding-top:1rem; border-top:1px solid var(--border-soft);">
-      <div class="nav-label">Utilities</div>
-      <button class="nav-link" onclick="toggleTheme()"><span class="nav-icon">◐</span> <span id="theme-label">Dark mode</span></button>
-    </div>
-  </aside>
-
-  <div class="content">
-    <div class="topbar">
-      <span class="topbar-title">Dashboard</span>
-      <div class="topbar-actions">
-        <span id="status-badge" style="font-size:.75rem;color:var(--muted);">Ready</span>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <h1>Agent Office</h1>
+        <p>Your AI workspace</p>
       </div>
-    </div>
+      <div class="nav-section-label">Navigation</div>
+      <a class="nav-link active" href="/">⌂ Hub</a>
+      <div class="nav-section-label">Offices</div>
+      <a class="nav-link" href="/office1">📚 Homework</a>
+      <a class="nav-link" href="/office2">💻 Website Team</a>
+      <div class="sidebar-footer">
+        <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">◐ Dark mode</button>
+      </div>
+    </aside>
 
-    <div class="page">
-      <div class="page-header">
-        <h2>Good to see you</h2>
-        <p>Run a quick agent task, or navigate to an office below.</p>
+    <div class="content">
+      <div class="topbar">
+        <span class="topbar-title">Hub</span>
+        <span id="status" style="font-size:.75rem;color:var(--muted);">Ready</span>
       </div>
 
-      <div class="office-grid">
-        <a class="office-card" href="/office1">
-          <div class="office-card-icon">📚</div>
-          <h3>Office 1 — Homework</h3>
-          <p>Fetch and complete homework across all 7 IB subjects. Includes email drafting.</p>
-          <div class="office-card-meta">
-            <span class="tag">Math AA HL</span>
-            <span class="tag">Physics HL</span>
-            <span class="tag">+5 more</span>
-          </div>
-        </a>
-        <a class="office-card" href="/office2">
-          <div class="office-card-icon">💻</div>
-          <h3>Office 2 — Website Team</h3>
-          <p>A full dev team to build and maintain your website. PM, designer, frontend, backend, QA, DevOps.</p>
-          <div class="office-card-meta">
-            <span class="tag">6 agents</span>
-            <span class="tag">Manager validated</span>
-          </div>
-        </a>
-      </div>
+      <div class="page">
+        <div class="page-header">
+          <h2>Agent Office</h2>
+          <p>Select an office below, or use the Manager agent to validate any output.</p>
+        </div>
 
-      <div style="margin-top:2rem;">
-        <div class="two-col">
-          <div class="card">
-            <div style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:1rem;">Quick task</div>
-            <label for="agent-select">Agent</label>
-            <select id="agent-select">
-              <option value="researcher">Researcher — searches the web</option>
-              <option value="writer">Writer — reads and writes files</option>
-              <option value="scheduler">Scheduler — helps plan your day</option>
-            </select>
-            <label for="task-input">Task</label>
-            <textarea id="task-input" placeholder="e.g. What is today's date and what day of the week is it?"></textarea>
-            <button class="run-btn" id="run-btn" onclick="runTask()">Run</button>
-            <div class="result-label">Result</div>
-            <div class="result-box" id="result">Your result will appear here.</div>
-          </div>
-
-          <div class="card">
-            <div style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:.75rem;">Recent tasks</div>
-            <div id="history-container">
-              <div style="font-size:.825rem;color:var(--muted);">No tasks yet.</div>
+        <!-- Office navigation cards -->
+        <div class="office-grid">
+          <a class="office-card" href="/office1">
+            <div class="office-card-icon">📚</div>
+            <h3>Office 1 — Homework</h3>
+            <p>Fetch and complete homework across all 7 IB subjects. Includes email drafting.</p>
+            <div class="office-card-tags">
+              <span class="tag">Math AA HL</span>
+              <span class="tag">Physics HL</span>
+              <span class="tag">+5 more</span>
             </div>
+          </a>
+          <a class="office-card" href="/office2">
+            <div class="office-card-icon">💻</div>
+            <h3>Office 2 — Website Team</h3>
+            <p>A full dev team to build and maintain your website with manager validation.</p>
+            <div class="office-card-tags">
+              <span class="tag">6 agents</span>
+              <span class="tag">GitHub integration</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Manager agent -->
+        <div class="manager-card">
+          <div class="manager-header">
+            <div class="manager-avatar">🎯</div>
+            <div>
+              <div class="manager-name">Manager Agent</div>
+              <div class="manager-role">Global quality controller · Claude Sonnet · Validates all outputs</div>
+            </div>
+          </div>
+          <div class="manager-desc">
+            The Manager validates any output against IB rubrics (for homework) or code quality standards (for website
+            work). Paste any agent output below and select what type of work it is.
+          </div>
+
+          <label for="task-type">Task type</label>
+          <select id="task-type"
+            style="width:100%;padding:.6rem .8rem;border-radius:8px;border:1px solid var(--border);font-size:.875rem;font-family:inherit;background:var(--surface);color:var(--text);">
+            <option value="homework">Homework — validate against IB rubric</option>
+            <option value="website_code">Website code — validate quality and correctness</option>
+          </select>
+
+          <div id="subject-row">
+            <label for="subject-select">Subject</label>
+            <select id="subject-select"
+              style="width:100%;padding:.6rem .8rem;border-radius:8px;border:1px solid var(--border);font-size:.875rem;font-family:inherit;background:var(--surface);color:var(--text);">
+              <option value="math_aa_hl">Math Analysis & Approaches HL</option>
+              <option value="physics_hl">Physics HL</option>
+              <option value="computer_science">Computer Science</option>
+              <option value="english_lang_lit">English Language & Literature SL</option>
+              <option value="french_b">French B SL</option>
+              <option value="economics_sl">Economics SL</option>
+              <option value="tok">Theory of Knowledge</option>
+            </select>
+          </div>
+
+          <label for="output-input">Output to validate</label>
+          <textarea id="output-input" placeholder="Paste the agent output you want the manager to review…"></textarea>
+
+          <button class="run-btn" id="validate-btn" onclick="runValidation()">Validate with Manager</button>
+
+          <div class="result-section" id="result-section" style="display:none;">
+            <div class="result-label">Validation result</div>
+            <div class="result-box" id="result-box"></div>
+            <div class="validation-row" id="val-row"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-  const HISTORY_KEY = 'ao-history-v1';
-  const THEME_KEY   = 'ao-theme';
-
-  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  function initTheme(){
-    const saved = localStorage.getItem(THEME_KEY);
-    const dark = saved === 'dark' || (saved == null && matchMedia('(prefers-color-scheme:dark)').matches);
-    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-    document.getElementById('theme-label').textContent = dark ? 'Light mode' : 'Dark mode';
-  }
-  function toggleTheme(){
-    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const next = dark ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem(THEME_KEY, next);
-    document.getElementById('theme-label').textContent = next === 'dark' ? 'Light mode' : 'Dark mode';
-  }
-
-  function loadHistory(){ try { return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]'); } catch { return []; } }
-  function saveHistory(entry){
-    const h = loadHistory();
-    h.unshift({ ...entry, at: Date.now() });
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(h.slice(0, 8)));
-    renderHistory();
-  }
-  function timeAgo(ts){
-    const s = Math.floor((Date.now()-ts)/1000);
-    if(s<60) return 'Just now';
-    if(s<3600) return Math.floor(s/60)+'m ago';
-    if(s<86400) return Math.floor(s/3600)+'h ago';
-    return new Date(ts).toLocaleDateString();
-  }
-  function renderHistory(){
-    const items = loadHistory();
-    const el = document.getElementById('history-container');
-    if(!items.length){ el.innerHTML='<div style="font-size:.825rem;color:var(--muted);">No tasks yet.</div>'; return; }
-    el.innerHTML = items.map(it=>`
-      <div class="history-item ${it.ok===false?'fail':''}">
-        <div class="history-meta">
-          <span class="history-agent">${esc(it.agent)}</span>
-          <span class="history-time">${timeAgo(it.at)}</span>
-        </div>
-        <div class="history-task">${esc(it.task.slice(0,80))}${it.task.length>80?'…':''}</div>
-      </div>`).join('');
-  }
-
-  async function runTask(){
-    const agent = document.getElementById('agent-select').value;
-    const task  = document.getElementById('task-input').value.trim();
-    const btn   = document.getElementById('run-btn');
-    const box   = document.getElementById('result');
-    if(!task){ alert('Please enter a task.'); return; }
-    btn.disabled = true; btn.textContent = 'Running…';
-    box.className = 'result-box loading';
-    box.innerHTML = '<span class="spinner"></span><span>Thinking…</span>';
-    document.getElementById('status-badge').textContent = 'Running…';
-    let ok = true;
-    try {
-      const res  = await fetch('/run', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({agent, task}) });
-      const data = await res.json();
-      if(data.error){ ok=false; box.className='result-box error'; box.textContent='Error: '+data.error; }
-      else { box.className='result-box'; box.textContent=data.result; }
-    } catch(e){
-      ok=false; box.className='result-box error';
-      box.textContent='Could not connect to the server. Make sure uvicorn is running on port 8000.';
+  <script>
+    function initTheme() {
+      const dark = localStorage.getItem('ao-theme') === 'dark' || (localStorage.getItem('ao-theme') == null && matchMedia('(prefers-color-scheme:dark)').matches);
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      document.getElementById('theme-btn').textContent = dark ? '◐ Light mode' : '◐ Dark mode';
     }
-    saveHistory({agent, task, ok});
-    btn.disabled=false; btn.textContent='Run';
-    document.getElementById('status-badge').textContent = ok ? 'Done ✓' : 'Error';
-    setTimeout(()=>document.getElementById('status-badge').textContent='Ready', 3000);
-  }
+    function toggleTheme() {
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+      localStorage.setItem('ao-theme', dark ? 'light' : 'dark');
+      document.getElementById('theme-btn').textContent = dark ? '◐ Dark mode' : '◐ Light mode';
+    }
 
-  initTheme();
-  renderHistory();
-</script>
+    document.getElementById('task-type').addEventListener('change', function () {
+      document.getElementById('subject-row').style.display = this.value === 'homework' ? 'block' : 'none';
+    });
+
+    async function runValidation() {
+      const output = document.getElementById('output-input').value.trim();
+      const taskType = document.getElementById('task-type').value;
+      const subject = taskType === 'homework' ? document.getElementById('subject-select').value : null;
+      const btn = document.getElementById('validate-btn');
+      const section = document.getElementById('result-section');
+      const box = document.getElementById('result-box');
+      const valRow = document.getElementById('val-row');
+
+      if (!output) { alert('Please paste some output to validate.'); return; }
+
+      btn.disabled = true; btn.textContent = 'Validating…';
+      section.style.display = 'block';
+      box.className = 'result-box loading';
+      box.innerHTML = '<span class="spinner"></span><span>Manager is reviewing…</span>';
+      valRow.innerHTML = '';
+      document.getElementById('status').textContent = 'Manager running…';
+
+      try {
+        const body = { output, task_type: taskType };
+        if (subject) body.subject = subject;
+
+        const res = await fetch('/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const text = await res.text();
+        let data;
+        try { data = JSON.parse(text); }
+        catch { throw new Error('Server error: ' + text.slice(0, 150)); }
+
+        if (data.error) { box.className = 'result-box error'; box.textContent = 'Error: ' + data.error; return; }
+
+        const valid = data.valid || data.approved;
+        box.className = 'result-box' + (valid ? ' success' : '');
+        box.textContent = data.feedback || 'No feedback provided.';
+
+        const scoreText = data.score_estimate ? ` · Score: ${data.score_estimate}` : '';
+        const issueCount = (data.issues || []).length;
+        valRow.innerHTML = valid
+          ? `<span class="val-pass">✓ Approved</span><span class="val-score">${scoreText}</span>`
+          : `<span class="val-fail">✗ Needs revision</span><span class="val-score">${scoreText} · ${issueCount} issue${issueCount !== 1 ? 's' : ''}</span>`;
+
+        if (!valid && (data.issues || []).length) {
+          box.textContent += '\n\nIssues:\n' + data.issues.map(i => '• ' + i).join('\n');
+        }
+        if (!valid && data.redo_task) {
+          box.textContent += '\n\nSuggested fix:\n' + data.redo_task;
+        }
+
+      } catch (e) {
+        box.className = 'result-box error';
+        box.textContent = e.message;
+      }
+
+      btn.disabled = false; btn.textContent = 'Validate with Manager';
+      document.getElementById('status').textContent = 'Ready';
+    }
+
+    initTheme();
+  </script>
 </body>
+
 </html>

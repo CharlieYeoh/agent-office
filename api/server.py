@@ -133,16 +133,19 @@ def fetch_all_homework():
 @app.get("/emails")
 def fetch_emails():
     """Run the email agent to read inbox and draft suggested replies."""
-    agent = HOMEWORK_AGENTS["email"]
-    from main import Memory
-    agent.memory = Memory()
-    result = run_agent(
-        "Read my latest 10 emails labelled 'school'. For each one that needs a reply, "
-        "draft an appropriate response and save it as a Gmail draft. "
-        "Return a summary of what you found and what drafts you created.",
-        agent, verbose=False
-    )
-    return {"result": result}
+    try:
+        agent = HOMEWORK_AGENTS["email"]
+        from main import Memory
+        agent.memory = Memory()
+        result = run_agent(
+            "Read my latest 10 emails labelled 'school'. For each one that needs a reply, "
+            "draft an appropriate response and save it as a Gmail draft. "
+            "Return a summary of what you found and what drafts you created.",
+            agent, verbose=False
+        )
+        return {"result": result}
+    except Exception as e:
+        return {"error": str(e)}
 
 
 @app.post("/website")

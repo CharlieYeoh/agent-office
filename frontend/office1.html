@@ -1,451 +1,1063 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Office 1 — Homework</title>
   <style>
     :root {
-      --bg: #faf9f6; --surface: #fff; --text: #2f3430; --muted: #5c605c;
-      --label: #475569; --border: #dde0db; --border-soft: #eaece8;
-      --accent: #48626e; --accent-light: #cbe7f5; --accent-text: #29434e;
-      --error: #9f403d; --error-bg: #fef2f2; --error-text: #9f403d;
-      --success: #2d6a4f; --success-bg: #f0fdf4;
-      --warning: #92400e; --warning-bg: #fffbeb;
-      --shadow: rgba(47,52,48,.06); --shadow-md: rgba(47,52,48,.14);
-      --paper1: #fff; --paper2: #f4f4f0; --paper3: #edeeea;
+      --bg: #faf9f6;
+      --surface: #fff;
+      --text: #2f3430;
+      --muted: #5c605c;
+      --label: #475569;
+      --border: #dde0db;
+      --border-soft: #eaece8;
+      --accent: #48626e;
+      --accent-light: #cbe7f5;
+      --accent-text: #29434e;
+      --error: #9f403d;
+      --error-bg: #fef2f2;
+      --error-text: #9f403d;
+      --success: #2d6a4f;
+      --success-bg: #f0fdf4;
+      --warning: #92400e;
+      --warning-bg: #fffbeb;
+      --shadow: rgba(47, 52, 48, .06);
+      --shadow-md: rgba(47, 52, 48, .14);
+      --paper1: #fff;
+      --paper2: #f4f4f0;
+      --paper3: #edeeea;
     }
+
     [data-theme="dark"] {
-      --bg: #1a1f1a; --surface: #242924; --text: #e8ede8; --muted: #8a8e8a;
-      --label: #b0b4b0; --border: #3a3f3a; --border-soft: #2e332e;
-      --accent: #7ab8cc; --accent-light: #1e3a47; --accent-text: #bdd9e6;
-      --error: #f87171; --error-bg: #2a0a0a; --error-text: #f87171;
-      --success: #4ade80; --success-bg: #052e16;
-      --shadow: rgba(0,0,0,.3); --shadow-md: rgba(0,0,0,.5);
-      --paper1: #2a2f2a; --paper2: #242924; --paper3: #1e231e;
+      --bg: #1a1f1a;
+      --surface: #242924;
+      --text: #e8ede8;
+      --muted: #8a8e8a;
+      --label: #b0b4b0;
+      --border: #3a3f3a;
+      --border-soft: #2e332e;
+      --accent: #7ab8cc;
+      --accent-light: #1e3a47;
+      --accent-text: #bdd9e6;
+      --error: #f87171;
+      --error-bg: #2a0a0a;
+      --error-text: #f87171;
+      --success: #4ade80;
+      --success-bg: #052e16;
+      --shadow: rgba(0, 0, 0, .3);
+      --shadow-md: rgba(0, 0, 0, .5);
+      --paper1: #2a2f2a;
+      --paper2: #242924;
+      --paper3: #1e231e;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
     /* Layout */
-    .shell { display: flex; min-height: 100vh; }
-    .sidebar { width: 220px; flex-shrink: 0; background: var(--paper2); border-right: 1px solid var(--border-soft); display: flex; flex-direction: column; padding: 1.25rem 0; position: fixed; top: 0; left: 0; height: 100vh; z-index: 40; overflow-y: auto; }
-    .content { margin-left: 220px; flex: 1; }
-    .topbar { background: var(--surface)/90; backdrop-filter: blur(8px); border-bottom: 1px solid var(--border-soft); padding: .75rem 2rem; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 30; }
-    .page { padding: 2rem 2.5rem; max-width: 1200px; }
+    .shell {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--paper2);
+      border-right: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      padding: 1.25rem 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 40;
+      overflow-y: auto;
+    }
+
+    .content {
+      margin-left: 220px;
+      flex: 1;
+    }
+
+    .topbar {
+      background: var(--surface)/90;
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-soft);
+      padding: .75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .page {
+      padding: 2rem 2.5rem;
+      max-width: 1200px;
+    }
 
     /* Sidebar */
-    .sidebar-brand { padding: .75rem 1.25rem 1rem; border-bottom: 1px solid var(--border-soft); margin-bottom: .75rem; }
-    .sidebar-brand h1 { font-size: 1rem; font-weight: 700; font-family: Georgia, serif; }
-    .sidebar-brand p { font-size: .7rem; color: var(--muted); margin-top: 2px; text-transform: uppercase; letter-spacing: .06em; }
-    .nav-link { display: flex; align-items: center; gap: .6rem; padding: .5rem 1.25rem; font-size: .825rem; font-weight: 500; color: var(--muted); text-decoration: none; transition: background .12s, color .12s; }
-    .nav-link:hover { background: var(--paper3); color: var(--text); }
-    .nav-link.active { color: var(--accent); font-weight: 600; background: var(--accent-light); border-right: 2px solid var(--accent); }
-    .nav-section-label { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: .75rem 1.25rem .3rem; opacity: .6; }
+    .sidebar-brand {
+      padding: .75rem 1.25rem 1rem;
+      border-bottom: 1px solid var(--border-soft);
+      margin-bottom: .75rem;
+    }
+
+    .sidebar-brand h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: Georgia, serif;
+    }
+
+    .sidebar-brand p {
+      font-size: .7rem;
+      color: var(--muted);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .5rem 1.25rem;
+      font-size: .825rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      transition: background .12s, color .12s;
+    }
+
+    .nav-link:hover {
+      background: var(--paper3);
+      color: var(--text);
+    }
+
+    .nav-link.active {
+      color: var(--accent);
+      font-weight: 600;
+      background: var(--accent-light);
+      border-right: 2px solid var(--accent);
+    }
+
+    .nav-section-label {
+      font-size: .65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      padding: .75rem 1.25rem .3rem;
+      opacity: .6;
+    }
 
     /* Topbar */
-    .topbar-left { display: flex; align-items: center; gap: 1rem; }
-    .topbar-title { font-size: .95rem; font-weight: 600; font-family: Georgia, serif; }
-    .back-link { font-size: .8rem; color: var(--muted); text-decoration: none; display: flex; align-items: center; gap: .3rem; }
-    .back-link:hover { color: var(--accent); }
-    .fetch-btn { padding: .55rem 1.25rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: .825rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: .4rem; transition: opacity .15s; }
-    .fetch-btn:hover:not(:disabled) { opacity: .9; }
-    .fetch-btn:disabled { opacity: .5; cursor: not-allowed; }
-    .last-fetch { font-size: .7rem; color: var(--muted); }
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .topbar-title {
+      font-size: .95rem;
+      font-weight: 600;
+      font-family: Georgia, serif;
+    }
+
+    .back-link {
+      font-size: .8rem;
+      color: var(--muted);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: .3rem;
+    }
+
+    .back-link:hover {
+      color: var(--accent);
+    }
+
+    .fetch-btn {
+      padding: .55rem 1.25rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: .825rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      transition: opacity .15s;
+    }
+
+    .fetch-btn:hover:not(:disabled) {
+      opacity: .9;
+    }
+
+    .fetch-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .last-fetch {
+      font-size: .7rem;
+      color: var(--muted);
+    }
 
     /* Page header */
-    .page-header { margin-bottom: 2rem; }
-    .page-header h2 { font-size: 2rem; font-weight: 700; font-family: Georgia, serif; margin-bottom: .3rem; }
-    .page-header p { color: var(--muted); font-size: .875rem; }
+    .page-header {
+      margin-bottom: 2rem;
+    }
+
+    .page-header h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      margin-bottom: .3rem;
+    }
+
+    .page-header p {
+      color: var(--muted);
+      font-size: .875rem;
+    }
 
     /* Stacks grid */
-    .stacks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-bottom: 2.5rem; }
-    @media (max-width:900px) { .stacks-grid { grid-template-columns: 1fr; } }
+    .stacks-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
 
-    .stack-title { font-family: Georgia, serif; font-size: 1.25rem; font-weight: 700; font-style: italic; margin-bottom: 1rem; display: flex; align-items: baseline; justify-content: space-between; }
-    .stack-count { font-size: .7rem; font-family: system-ui, sans-serif; font-style: normal; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+    @media (max-width:900px) {
+      .stacks-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stack-title {
+      font-family: Georgia, serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      font-style: italic;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+
+    .stack-count {
+      font-size: .7rem;
+      font-family: system-ui, sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+    }
 
     /* Paper stack */
-    .paper-stack { position: relative; min-height: 80px; }
-    .paper-stack-behind { position: absolute; inset: 0; background: var(--paper2); border-radius: 4px; transform: rotate(1.5deg) translateY(4px); border: 1px solid var(--border); }
-    .paper-stack-behind2 { position: absolute; inset: 0; background: var(--paper3); border-radius: 4px; transform: rotate(-1deg) translateY(7px); border: 1px solid var(--border); }
-    .papers-container { position: relative; z-index: 2; display: flex; flex-direction: column; gap: .75rem; }
+    .paper-stack {
+      position: relative;
+      min-height: 80px;
+    }
+
+    .paper-stack-behind {
+      position: absolute;
+      inset: 0;
+      background: var(--paper2);
+      border-radius: 4px;
+      transform: rotate(1.5deg) translateY(4px);
+      border: 1px solid var(--border);
+    }
+
+    .paper-stack-behind2 {
+      position: absolute;
+      inset: 0;
+      background: var(--paper3);
+      border-radius: 4px;
+      transform: rotate(-1deg) translateY(7px);
+      border: 1px solid var(--border);
+    }
+
+    .papers-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: .75rem;
+    }
 
     /* Paper card */
-    .paper { background: var(--paper1); border: 1px solid var(--border); border-radius: 4px; padding: 1.1rem 1.25rem; cursor: pointer; transition: box-shadow .15s, transform .15s; box-shadow: 0 1px 3px var(--shadow); }
-    .paper:hover { box-shadow: 0 4px 12px var(--shadow-md); transform: translateY(-1px); }
-    .paper-header { display: flex; align-items: flex-start; justify-content: space-between; gap: .75rem; margin-bottom: .5rem; }
-    .paper-subject { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
-    .paper-badge { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 2px 7px; border-radius: 99px; flex-shrink: 0; }
-    .badge-done { background: var(--success-bg); color: var(--success); }
-    .badge-needs { background: var(--warning-bg); color: var(--warning); }
-    .badge-error { background: var(--error-bg); color: var(--error-text); }
-    .paper-title { font-size: .9rem; font-weight: 600; margin-bottom: .35rem; line-height: 1.4; }
-    .paper-preview { font-size: .78rem; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .paper-meta { margin-top: .6rem; font-size: .65rem; color: var(--muted); font-family: monospace; text-transform: uppercase; letter-spacing: .06em; }
+    .paper {
+      background: var(--paper1);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.1rem 1.25rem;
+      cursor: pointer;
+      transition: box-shadow .15s, transform .15s;
+      box-shadow: 0 1px 3px var(--shadow);
+    }
+
+    .paper:hover {
+      box-shadow: 0 4px 12px var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .paper-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: .75rem;
+      margin-bottom: .5rem;
+    }
+
+    .paper-subject {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--accent);
+    }
+
+    .paper-badge {
+      font-size: .6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      padding: 2px 7px;
+      border-radius: 99px;
+      flex-shrink: 0;
+    }
+
+    .badge-done {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .badge-needs {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .badge-error {
+      background: var(--error-bg);
+      color: var(--error-text);
+    }
+
+    .paper-title {
+      font-size: .9rem;
+      font-weight: 600;
+      margin-bottom: .35rem;
+      line-height: 1.4;
+    }
+
+    .paper-preview {
+      font-size: .78rem;
+      color: var(--muted);
+      line-height: 1.5;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .paper-meta {
+      margin-top: .6rem;
+      font-size: .65rem;
+      color: var(--muted);
+      font-family: monospace;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
 
     /* Empty state */
-    .empty-state { padding: 2rem 1.5rem; text-align: center; background: var(--paper1); border: 1px dashed var(--border); border-radius: 8px; }
-    .empty-state p { color: var(--muted); font-size: .875rem; }
-    .empty-state .hint { font-size: .775rem; margin-top: .4rem; color: var(--muted); opacity: .7; }
+    .empty-state {
+      padding: 2rem 1.5rem;
+      text-align: center;
+      background: var(--paper1);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+      font-size: .875rem;
+    }
+
+    .empty-state .hint {
+      font-size: .775rem;
+      margin-top: .4rem;
+      color: var(--muted);
+      opacity: .7;
+    }
 
     /* Needs input cards */
-    .needs-card { background: var(--paper1); border: 1px solid var(--border); border-left: 3px solid var(--warning); border-radius: 4px; padding: 1.1rem 1.25rem; margin-bottom: .75rem; }
-    .needs-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: .5rem; }
-    .needs-card h5 { font-size: .9rem; font-weight: 600; }
-    .needs-due { font-size: .65rem; font-family: monospace; color: var(--muted); }
-    .needs-desc { font-size: .8rem; color: var(--muted); line-height: 1.55; }
+    .needs-card {
+      background: var(--paper1);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--warning);
+      border-radius: 4px;
+      padding: 1.1rem 1.25rem;
+      margin-bottom: .75rem;
+    }
+
+    .needs-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: .5rem;
+    }
+
+    .needs-card h5 {
+      font-size: .9rem;
+      font-weight: 600;
+    }
+
+    .needs-due {
+      font-size: .65rem;
+      font-family: monospace;
+      color: var(--muted);
+    }
+
+    .needs-desc {
+      font-size: .8rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
 
     /* Emails section */
-    .section-title { font-family: Georgia, serif; font-size: 1.25rem; font-style: italic; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; }
-    .section-divider { flex: 1; height: 1px; background: var(--border-soft); }
-    .email-list { background: var(--surface); border: 1px solid var(--border-soft); border-radius: 10px; overflow: hidden; }
-    .email-row { padding: 1rem 1.25rem; display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border-soft); transition: background .12s; }
-    .email-row:last-child { border-bottom: none; }
-    .email-row:hover { background: var(--bg); }
-    .email-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .75rem; flex-shrink: 0; background: var(--accent-light); color: var(--accent-text); }
-    .email-body { flex: 1; min-width: 0; }
-    .email-from { font-weight: 600; font-size: .85rem; margin-bottom: 2px; }
-    .email-subject { font-size: .75rem; color: var(--muted); margin-bottom: 2px; }
-    .email-preview { font-size: .78rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .email-actions { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; }
-    .email-time { font-size: .68rem; color: var(--muted); font-family: monospace; }
-    .draft-btn { padding: .4rem .85rem; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-size: .75rem; font-weight: 600; cursor: pointer; color: var(--text); transition: background .12s, border-color .12s; white-space: nowrap; }
-    .draft-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .draft-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .section-title {
+      font-family: Georgia, serif;
+      font-size: 1.25rem;
+      font-style: italic;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-divider {
+      flex: 1;
+      height: 1px;
+      background: var(--border-soft);
+    }
+
+    .email-list {
+      background: var(--surface);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .email-row {
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border-soft);
+      transition: background .12s;
+    }
+
+    .email-row:last-child {
+      border-bottom: none;
+    }
+
+    .email-row:hover {
+      background: var(--bg);
+    }
+
+    .email-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: .75rem;
+      flex-shrink: 0;
+      background: var(--accent-light);
+      color: var(--accent-text);
+    }
+
+    .email-body {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .email-from {
+      font-weight: 600;
+      font-size: .85rem;
+      margin-bottom: 2px;
+    }
+
+    .email-subject {
+      font-size: .75rem;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .email-preview {
+      font-size: .78rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .email-actions {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      flex-shrink: 0;
+    }
+
+    .email-time {
+      font-size: .68rem;
+      color: var(--muted);
+      font-family: monospace;
+    }
+
+    .draft-btn {
+      padding: .4rem .85rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: .75rem;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text);
+      transition: background .12s, border-color .12s;
+      white-space: nowrap;
+    }
+
+    .draft-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .draft-btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
 
     /* Modal */
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1.5rem; opacity: 0; pointer-events: none; transition: opacity .2s; }
-    .modal-backdrop.open { opacity: 1; pointer-events: all; }
-    .modal { background: var(--surface); border-radius: 12px; max-width: 720px; width: 100%; max-height: 85vh; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,.3); transform: translateY(12px); transition: transform .2s; }
-    .modal-backdrop.open .modal { transform: translateY(0); }
-    .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-soft); display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
-    .modal-header h3 { font-size: 1rem; font-weight: 700; }
-    .modal-header p { font-size: .78rem; color: var(--muted); margin-top: 3px; }
-    .modal-close { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 1.25rem; padding: .25rem; line-height: 1; flex-shrink: 0; }
-    .modal-close:hover { color: var(--text); }
-    .modal-body { padding: 1.5rem; overflow-y: auto; flex: 1; white-space: pre-wrap; font-size: .875rem; line-height: 1.75; font-family: system-ui, sans-serif; }
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .45);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 12px;
+      max-width: 720px;
+      width: 100%;
+      max-height: 85vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+      transform: translateY(12px);
+      transition: transform .2s;
+    }
+
+    .modal-backdrop.open .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-soft);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .modal-header h3 {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .modal-header p {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 1.25rem;
+      padding: .25rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover {
+      color: var(--text);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex: 1;
+      white-space: pre-wrap;
+      font-size: .875rem;
+      line-height: 1.75;
+      font-family: system-ui, sans-serif;
+    }
 
     /* Progress */
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.3); border-top-color: #fff; border-radius: 50%; animation: spin .6s linear infinite; }
-    .progress-bar { height: 3px; background: var(--border-soft); border-radius: 99px; overflow: hidden; margin-top: .5rem; }
-    .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width .4s; }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, .3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+
+    .progress-bar {
+      height: 3px;
+      background: var(--border-soft);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-top: .5rem;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width .4s;
+    }
 
     /* Toast */
-    .toast { position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%) translateY(60px); background: var(--text); color: var(--bg); padding: .6rem 1.25rem; border-radius: 8px; font-size: .825rem; font-weight: 500; z-index: 200; transition: transform .2s; white-space: nowrap; }
-    .toast.show { transform: translateX(-50%) translateY(0); }
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: var(--text);
+      color: var(--bg);
+      padding: .6rem 1.25rem;
+      border-radius: 8px;
+      font-size: .825rem;
+      font-weight: 500;
+      z-index: 200;
+      transition: transform .2s;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
 
     /* Theme toggle */
-    .theme-btn { background: none; border: 1px solid var(--border); border-radius: 7px; padding: .35rem .7rem; font-size: .75rem; cursor: pointer; color: var(--muted); }
+    .theme-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: .35rem .7rem;
+      font-size: .75rem;
+      cursor: pointer;
+      color: var(--muted);
+    }
 
-    @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; } .page { padding: 1rem; } }
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+
+      .content {
+        margin-left: 0;
+      }
+
+      .page {
+        padding: 1rem;
+      }
+    }
   </style>
 </head>
+
 <body>
-<div class="shell">
-  <aside class="sidebar">
-    <div class="sidebar-brand">
-      <h1>The Academic</h1>
-      <p>Office 1 — Homework</p>
-    </div>
-    <div class="nav-section-label">Navigation</div>
-    <a class="nav-link active" href="/office1">📚 Dashboard</a>
-    <a class="nav-link" href="/">⌂ Main hub</a>
-    <a class="nav-link" href="/office2">💻 Website team</a>
-    <div class="nav-section-label" style="margin-top:auto;">Subjects</div>
-    <a class="nav-link" href="#completed">Math AA HL</a>
-    <a class="nav-link" href="#completed">Physics HL</a>
-    <a class="nav-link" href="#completed">Computer Science</a>
-    <a class="nav-link" href="#completed">English Lit</a>
-    <a class="nav-link" href="#completed">French B</a>
-    <a class="nav-link" href="#completed">Economics SL</a>
-    <a class="nav-link" href="#completed">TOK</a>
-    <div style="padding:1rem 1.25rem;border-top:1px solid var(--border-soft);margin-top:.75rem;">
-      <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">◐ Dark mode</button>
-    </div>
-  </aside>
-
-  <div class="content">
-    <div class="topbar">
-      <div class="topbar-left">
-        <a class="back-link" href="/">← Hub</a>
-        <span class="topbar-title">Office 1 — Homework</span>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <h1>The Academic</h1>
+        <p>Office 1 — Homework</p>
       </div>
-      <div style="display:flex;align-items:center;gap:.75rem;">
-        <span class="last-fetch" id="last-fetch">Not fetched yet</span>
-        <button class="fetch-btn" id="fetch-btn" onclick="fetchAll()">
-          <span id="fetch-icon">⟳</span> Fetch all homework
-        </button>
+      <div class="nav-section-label">Navigation</div>
+      <a class="nav-link active" href="/office1">📚 Dashboard</a>
+      <a class="nav-link" href="/">⌂ Main hub</a>
+      <a class="nav-link" href="/office2">💻 Website team</a>
+      <div class="nav-section-label" style="margin-top:auto;">Subjects</div>
+      <a class="nav-link" href="#completed">Math AA HL</a>
+      <a class="nav-link" href="#completed">Physics HL</a>
+      <a class="nav-link" href="#completed">Computer Science</a>
+      <a class="nav-link" href="#completed">English Lit</a>
+      <a class="nav-link" href="#completed">French B</a>
+      <a class="nav-link" href="#completed">Economics SL</a>
+      <a class="nav-link" href="#completed">TOK</a>
+      <div style="padding:1rem 1.25rem;border-top:1px solid var(--border-soft);margin-top:.75rem;">
+        <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">◐ Dark mode</button>
       </div>
-    </div>
+    </aside>
 
-    <div class="page">
-      <div class="page-header">
-        <h2>Office 1 — Homework</h2>
-        <p>Curating your academic progress and outstanding requirements.</p>
-        <div class="progress-bar" id="progress-bar" style="display:none;margin-top:.75rem;">
-          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    <div class="content">
+      <div class="topbar">
+        <div class="topbar-left">
+          <a class="back-link" href="/">← Hub</a>
+          <span class="topbar-title">Office 1 — Homework</span>
         </div>
-        <div id="fetch-status" style="font-size:.8rem;color:var(--muted);margin-top:.5rem;display:none;"></div>
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <span class="last-fetch" id="last-fetch">Not fetched yet</span>
+          <button class="fetch-btn" id="fetch-btn" onclick="fetchAll()">
+            <span id="fetch-icon">⟳</span> Fetch all homework
+          </button>
+        </div>
       </div>
 
-      <div class="stacks-grid">
-        <!-- Completed stack -->
-        <section id="completed">
-          <div class="stack-title">
-            Completed homework
-            <span class="stack-count" id="completed-count">0 tasks</span>
+      <div class="page">
+        <div class="page-header">
+          <h2>Office 1 — Homework</h2>
+          <p>Curating your academic progress and outstanding requirements.</p>
+          <div class="progress-bar" id="progress-bar" style="display:none;margin-top:.75rem;">
+            <div class="progress-fill" id="progress-fill" style="width:0%"></div>
           </div>
-          <div class="paper-stack">
-            <div class="paper-stack-behind2"></div>
-            <div class="paper-stack-behind"></div>
-            <div class="papers-container" id="completed-papers">
-              <div class="empty-state">
-                <p>No completed homework yet.</p>
-                <p class="hint">Click "Fetch all homework" to start.</p>
+          <div id="fetch-status" style="font-size:.8rem;color:var(--muted);margin-top:.5rem;display:none;"></div>
+        </div>
+
+        <div class="stacks-grid">
+          <!-- Completed stack -->
+          <section id="completed">
+            <div class="stack-title">
+              Completed homework
+              <span class="stack-count" id="completed-count">0 tasks</span>
+            </div>
+            <div class="paper-stack">
+              <div class="paper-stack-behind2"></div>
+              <div class="paper-stack-behind"></div>
+              <div class="papers-container" id="completed-papers">
+                <div class="empty-state">
+                  <p>No completed homework yet.</p>
+                  <p class="hint">Click "Fetch all homework" to start.</p>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        <!-- Needs input stack -->
+          <!-- Needs input stack -->
+          <section>
+            <div class="stack-title">
+              Needs your input
+              <span class="stack-count" style="color:var(--warning);" id="needs-count">0 tasks</span>
+            </div>
+            <div id="needs-papers">
+              <div class="empty-state">
+                <p>No tasks require your input.</p>
+                <p class="hint">Tasks that need a file upload will appear here.</p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- Emails -->
         <section>
-          <div class="stack-title">
-            Needs your input
-            <span class="stack-count" style="color:var(--warning);" id="needs-count">0 tasks</span>
+          <div class="section-title">
+            Emails
+            <div class="section-divider"></div>
+            <button class="draft-btn" id="email-btn" onclick="fetchEmails()">Check inbox</button>
           </div>
-          <div id="needs-papers">
+          <div id="email-result">
             <div class="empty-state">
-              <p>No tasks require your input.</p>
-              <p class="hint">Tasks that need a file upload will appear here.</p>
+              <p>Click "Check inbox" to read your emails and draft replies.</p>
             </div>
           </div>
         </section>
       </div>
-
-      <!-- Emails -->
-      <section>
-        <div class="section-title">
-          Emails
-          <div class="section-divider"></div>
-          <button class="draft-btn" id="email-btn" onclick="fetchEmails()">Check inbox</button>
-        </div>
-        <div id="email-result">
-          <div class="empty-state">
-            <p>Click "Check inbox" to read your emails and draft replies.</p>
-          </div>
-        </div>
-      </section>
     </div>
   </div>
-</div>
 
-<!-- Modal -->
-<div class="modal-backdrop" id="modal" onclick="closeModal(event)">
-  <div class="modal" role="dialog" aria-modal="true">
-    <div class="modal-header">
-      <div>
-        <h3 id="modal-title">Homework</h3>
-        <p id="modal-subject"></p>
+  <!-- Modal -->
+  <div class="modal-backdrop" id="modal" onclick="closeModal(event)">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-title">Homework</h3>
+          <p id="modal-subject"></p>
+        </div>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
       </div>
-      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <div class="modal-body" id="modal-body"></div>
     </div>
-    <div class="modal-body" id="modal-body"></div>
   </div>
-</div>
 
-<div class="toast" id="toast"></div>
+  <div class="toast" id="toast"></div>
 
-<script>
-  const SUBJECTS = [
-    { key:'math_aa_hl',       label:'Math AA HL',              color:'#48626e' },
-    { key:'physics_hl',       label:'Physics HL',              color:'#5b5d78' },
-    { key:'computer_science', label:'Computer Science',         color:'#3d6b5c' },
-    { key:'english_lang_lit', label:'English Lang & Lit SL',   color:'#7c5c3e' },
-    { key:'french_b',         label:'French B SL',             color:'#5c3e7c' },
-    { key:'economics_sl',     label:'Economics SL',            color:'#6e4848' },
-    { key:'tok',              label:'Theory of Knowledge',      color:'#4a5c6e' },
-  ];
+  <script>
+    const SUBJECTS = [
+      { key: 'math_aa_hl', label: 'Math AA HL' },
+      { key: 'physics_hl', label: 'Physics HL' },
+      { key: 'computer_science', label: 'Computer Science' },
+      { key: 'english_lang_lit', label: 'English Lang & Lit SL' },
+      { key: 'french_b', label: 'French B SL' },
+      { key: 'economics_sl', label: 'Economics SL' },
+      { key: 'tok', label: 'Theory of Knowledge' },
+    ];
 
-  let resultsCache = {};
+    // Store results globally so the modal can access them without
+    // trying to pass the full text through an HTML attribute
+    let RESULTS_CACHE = {};
 
-  // Theme
-  function initTheme(){
-    const dark = localStorage.getItem('ao-theme') === 'dark' || (localStorage.getItem('ao-theme')==null && matchMedia('(prefers-color-scheme:dark)').matches);
-    document.documentElement.setAttribute('data-theme', dark?'dark':'light');
-    document.getElementById('theme-btn').textContent = dark ? '◐ Light mode' : '◐ Dark mode';
-  }
-  function toggleTheme(){
-    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-    document.documentElement.setAttribute('data-theme', dark?'light':'dark');
-    localStorage.setItem('ao-theme', dark?'light':'dark');
-    document.getElementById('theme-btn').textContent = dark ? '◐ Dark mode' : '◐ Light mode';
-  }
-
-  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  function showToast(msg, duration=2800){
-    const t = document.getElementById('toast');
-    t.textContent = msg; t.classList.add('show');
-    setTimeout(()=>t.classList.remove('show'), duration);
-  }
-
-  function openModal(subject, content){
-    const s = SUBJECTS.find(x=>x.key===subject);
-    document.getElementById('modal-title').textContent = s ? s.label : subject;
-    document.getElementById('modal-subject').textContent = 'Completed homework';
-    document.getElementById('modal-body').textContent = content;
-    document.getElementById('modal').classList.add('open');
-  }
-  function closeModal(e){
-    if(!e || e.target === document.getElementById('modal')){
-      document.getElementById('modal').classList.remove('open');
+    function initTheme() {
+      const dark = localStorage.getItem('ao-theme') === 'dark' || (localStorage.getItem('ao-theme') == null && matchMedia('(prefers-color-scheme:dark)').matches);
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      document.getElementById('theme-btn').textContent = dark ? '◐ Light mode' : '◐ Dark mode';
     }
-  }
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
-
-  function parseResult(text, subjectKey){
-    // Determine if this is "needs input" or "completed"
-    const lower = text.toLowerCase();
-    const needsKeywords = ['needs input', 'need input', 'cannot complete', 'requires a file', 'file submission', 'no homework', 'not found'];
-    const needsInput = needsKeywords.some(k=>lower.includes(k));
-    return { needsInput, text };
-  }
-
-  function renderCompleted(results){
-    const container = document.getElementById('completed-papers');
-    const completed = Object.entries(results).filter(([k,v])=>{
-      const { needsInput } = parseResult(v, k);
-      return !needsInput;
-    });
-    document.getElementById('completed-count').textContent = completed.length + ' task' + (completed.length!==1?'s':'');
-    if(!completed.length){
-      container.innerHTML = '<div class="empty-state"><p>No completed homework found.</p><p class="hint">All tasks may require your input, or no homework is due.</p></div>';
-      return;
+    function toggleTheme() {
+      const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+      localStorage.setItem('ao-theme', dark ? 'light' : 'dark');
+      document.getElementById('theme-btn').textContent = dark ? '◐ Dark mode' : '◐ Light mode';
     }
-    container.innerHTML = completed.map(([key, text])=>{
-      const s = SUBJECTS.find(x=>x.key===key);
-      const label = s ? s.label : key;
-      const preview = text.replace(/\*\*/g,'').slice(0,120);
-      const now = new Date().toLocaleDateString('en-GB', {day:'2-digit',month:'2-digit',year:'numeric'});
-      return `<div class="paper" onclick="openModal('${esc(key)}', ${JSON.stringify(text)})">
+
+    function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+
+    function showToast(msg, duration = 2800) {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), duration);
+    }
+
+    function openModal(subjectKey) {
+      const text = RESULTS_CACHE[subjectKey];
+      if (!text) return;
+      const s = SUBJECTS.find(x => x.key === subjectKey);
+      document.getElementById('modal-title').textContent = s ? s.label : subjectKey;
+      document.getElementById('modal-subject').textContent = 'Completed homework — click anywhere outside to close';
+      document.getElementById('modal-body').textContent = text;
+      document.getElementById('modal').classList.add('open');
+    }
+    function closeModal(e) {
+      if (!e || e.target === document.getElementById('modal')) {
+        document.getElementById('modal').classList.remove('open');
+      }
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    function isNoHomework(text) {
+      const lower = text.toLowerCase();
+      return [
+        'no homework', 'not found', 'no tasks', 'nothing due',
+        'aucun devoir', 'pas de devoir', '0 homework', 'no assignments'
+      ].some(k => lower.includes(k));
+    }
+
+    function isNeedsInput(text) {
+      const lower = text.toLowerCase();
+      return [
+        'needs input', 'need input', 'cannot complete', 'requires a file',
+        'file submission', 'cannot be done', 'unable to complete'
+      ].some(k => lower.includes(k));
+    }
+
+    function renderCompleted(results) {
+      const container = document.getElementById('completed-papers');
+      const completed = Object.entries(results).filter(([k, v]) =>
+        !isNeedsInput(v) && !isNoHomework(v)
+      );
+      document.getElementById('completed-count').textContent =
+        completed.length + ' task' + (completed.length !== 1 ? 's' : '');
+
+      if (!completed.length) {
+        container.innerHTML = '<div class="empty-state"><p>No completed homework found.</p><p class="hint">Click "Fetch all homework" to start.</p></div>';
+        return;
+      }
+
+      container.innerHTML = completed.map(([key, text]) => {
+        const s = SUBJECTS.find(x => x.key === key);
+        const label = s ? s.label : key;
+        const preview = text.replace(/\*\*/g, '').slice(0, 120);
+        const now = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        // Use data-key attribute instead of passing text through onclick
+        return `<div class="paper" data-key="${esc(key)}">
         <div class="paper-header">
           <span class="paper-subject">${esc(label)}</span>
           <span class="paper-badge badge-done">Completed</span>
         </div>
         <div class="paper-title">${esc(label)} — Homework solutions</div>
-        <div class="paper-preview">${esc(preview)}${text.length>120?'…':''}</div>
+        <div class="paper-preview">${esc(preview)}${text.length > 120 ? '…' : ''}</div>
         <div class="paper-meta">Click to view full solution · ${now}</div>
       </div>`;
-    }).join('');
-  }
+      }).join('');
 
-  function renderNeeds(results){
-    const container = document.getElementById('needs-papers');
-    const needs = Object.entries(results).filter(([k,v])=>{
-      const { needsInput } = parseResult(v, k);
-      return needsInput;
-    });
-    document.getElementById('needs-count').textContent = needs.length + ' task' + (needs.length!==1?'s':'');
-    if(!needs.length){
-      container.innerHTML = '<div class="empty-state"><p>No tasks require your input.</p></div>';
-      return;
+      // Attach click handlers after rendering
+      container.querySelectorAll('.paper').forEach(el => {
+        el.addEventListener('click', () => openModal(el.dataset.key));
+      });
     }
-    container.innerHTML = needs.map(([key, text])=>{
-      const s = SUBJECTS.find(x=>x.key===key);
-      const label = s ? s.label : key;
-      const preview = text.replace(/\*\*/g,'').slice(0,200);
-      return `<div class="needs-card">
+
+    function renderNeeds(results) {
+      const container = document.getElementById('needs-papers');
+      // Only show tasks that genuinely need input — skip "no homework" entries entirely
+      const needs = Object.entries(results).filter(([k, v]) =>
+        isNeedsInput(v) && !isNoHomework(v)
+      );
+      document.getElementById('needs-count').textContent =
+        needs.length + ' task' + (needs.length !== 1 ? 's' : '');
+
+      if (!needs.length) {
+        container.innerHTML = '<div class="empty-state"><p>No tasks require your input.</p></div>';
+        return;
+      }
+
+      container.innerHTML = needs.map(([key, text]) => {
+        const s = SUBJECTS.find(x => x.key === key);
+        const label = s ? s.label : key;
+        const preview = text.replace(/\*\*/g, '').slice(0, 200);
+        return `<div class="needs-card">
         <div class="needs-card-header">
           <h5>${esc(label)}</h5>
           <span class="needs-due">ACTION REQUIRED</span>
         </div>
-        <div class="needs-desc">${esc(preview)}${text.length>200?'…':''}</div>
+        <div class="needs-desc">${esc(preview)}${text.length > 200 ? '…' : ''}</div>
       </div>`;
-    }).join('');
-  }
-
-  async function fetchAll(){
-    const btn = document.getElementById('fetch-btn');
-    const icon = document.getElementById('fetch-icon');
-    const statusEl = document.getElementById('fetch-status');
-    const progress = document.getElementById('progress-bar');
-    const fill = document.getElementById('progress-fill');
-
-    btn.disabled = true;
-    icon.innerHTML = '<span class="spinner" style="border-top-color:#fff;border-color:rgba(255,255,255,.3);"></span>';
-    progress.style.display = 'block';
-    statusEl.style.display = 'block';
-    statusEl.textContent = 'Connecting to Pronote and running all subject agents…';
-    fill.style.width = '10%';
-
-    try {
-      fill.style.width = '30%';
-      statusEl.textContent = 'Agents working… this takes 30–90 seconds';
-      const res = await fetch('/homework/fetch');
-      fill.style.width = '90%';
-      if(!res.ok) throw new Error('Server returned ' + res.status);
-      const data = await res.json();
-      if(data.detail) throw new Error(data.detail);
-      resultsCache = data;
-      fill.style.width = '100%';
-      renderCompleted(data);
-      renderNeeds(data);
-      const now = new Date().toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit'});
-      document.getElementById('last-fetch').textContent = 'Last fetched: ' + now;
-      statusEl.textContent = 'All agents completed.';
-      showToast('Homework fetched ✓');
-      setTimeout(()=>{ progress.style.display='none'; statusEl.style.display='none'; }, 3000);
-    } catch(e){
-      fill.style.width = '100%';
-      fill.style.background = 'var(--error)';
-      statusEl.textContent = 'Error: ' + e.message;
-      showToast('Error fetching homework', 4000);
+      }).join('');
     }
-    btn.disabled = false;
-    icon.textContent = '⟳';
-  }
 
-  async function fetchEmails(){
-    const btn = document.getElementById('email-btn');
-    const container = document.getElementById('email-result');
-    btn.disabled = true; btn.textContent = 'Loading…';
-    container.innerHTML = '<div class="empty-state"><p style="color:var(--muted);">Reading emails and drafting replies…</p></div>';
-    try {
-      const res = await fetch('/emails');
-      const data = await res.json();
-      if(data.error) throw new Error(data.error);
-      // Parse the result text and render email rows
-      const text = data.result || '';
-      container.innerHTML = `<div class="email-list">
+    async function fetchAll() {
+      const btn = document.getElementById('fetch-btn');
+      const icon = document.getElementById('fetch-icon');
+      const statusEl = document.getElementById('fetch-status');
+      const progress = document.getElementById('progress-bar');
+      const fill = document.getElementById('progress-fill');
+
+      btn.disabled = true;
+      icon.innerHTML = '<span class="spinner" style="border-top-color:#fff;border-color:rgba(255,255,255,.3);"></span>';
+      progress.style.display = 'block';
+      statusEl.style.display = 'block';
+      statusEl.textContent = 'Connecting to Pronote and running all subject agents…';
+      fill.style.width = '10%';
+
+      try {
+        fill.style.width = '30%';
+        statusEl.textContent = 'Agents working… this takes 30–90 seconds';
+        const res = await fetch('/homework/fetch');
+        const text = await res.text();
+        fill.style.width = '90%';
+        let data;
+        try { data = JSON.parse(text); }
+        catch { throw new Error('Server error: ' + text.slice(0, 120)); }
+        if (data.detail) throw new Error(data.detail);
+        if (data.error) throw new Error(data.error);
+
+        // Store in global cache so modals can access full text
+        RESULTS_CACHE = data;
+
+        fill.style.width = '100%';
+        renderCompleted(data);
+        renderNeeds(data);
+        const now = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('last-fetch').textContent = 'Last fetched: ' + now;
+        statusEl.textContent = 'All agents completed.';
+        showToast('Homework fetched ✓');
+        setTimeout(() => { progress.style.display = 'none'; statusEl.style.display = 'none'; }, 3000);
+      } catch (e) {
+        fill.style.width = '100%';
+        fill.style.background = 'var(--error)';
+        statusEl.textContent = 'Error: ' + e.message;
+        showToast('Error: ' + e.message, 4000);
+      }
+      btn.disabled = false;
+      icon.textContent = '⟳';
+    }
+
+    async function fetchEmails() {
+      const btn = document.getElementById('email-btn');
+      const container = document.getElementById('email-result');
+      btn.disabled = true; btn.textContent = 'Loading…';
+      container.innerHTML = '<div class="empty-state"><p style="color:var(--muted);">Reading emails and drafting replies…</p></div>';
+      try {
+        const res = await fetch('/emails');
+        const text = await res.text();
+        let data;
+        try { data = JSON.parse(text); }
+        catch { throw new Error('Server error: ' + text.slice(0, 120)); }
+        if (data.error) throw new Error(data.error);
+        const fullText = data.result || '';
+        container.innerHTML = `<div class="email-list">
         <div class="email-row">
           <div class="email-avatar">AI</div>
           <div class="email-body">
             <div class="email-from">Email Agent</div>
-            <div class="email-subject">Summary of inbox</div>
-            <div class="email-preview">${esc(text.slice(0,120))}…</div>
+            <div class="email-subject">Inbox summary</div>
+            <div class="email-preview">${esc(fullText.slice(0, 120))}…</div>
           </div>
           <div class="email-actions">
-            <button class="draft-btn" onclick="showEmailDetail(${JSON.stringify(text)})">View full report</button>
+            <button class="draft-btn" id="email-expand-btn">View full report</button>
           </div>
         </div>
       </div>`;
-      showToast('Emails checked ✓');
-    } catch(e){
-      container.innerHTML = `<div class="empty-state" style="border-color:var(--error);"><p style="color:var(--error-text);">Error: ${esc(e.message)}</p></div>`;
+        document.getElementById('email-expand-btn').addEventListener('click', () => {
+          document.getElementById('modal-title').textContent = 'Email Report';
+          document.getElementById('modal-subject').textContent = 'Drafted replies saved to your Gmail drafts';
+          document.getElementById('modal-body').textContent = fullText;
+          document.getElementById('modal').classList.add('open');
+        });
+        showToast('Emails checked ✓');
+      } catch (e) {
+        container.innerHTML = `<div class="empty-state" style="border-color:var(--error);"><p style="color:var(--error-text);">Error: ${esc(e.message)}</p></div>`;
+      }
+      btn.disabled = false; btn.textContent = 'Check inbox';
     }
-    btn.disabled = false; btn.textContent = 'Check inbox';
-  }
 
-  function showEmailDetail(text){
-    document.getElementById('modal-title').textContent = 'Email Report';
-    document.getElementById('modal-subject').textContent = 'Drafted replies saved to your Gmail drafts';
-    document.getElementById('modal-body').textContent = text;
-    document.getElementById('modal').classList.add('open');
-  }
-
-  initTheme();
-</script>
+    initTheme();
+  </script>
 </body>
+
 </html>
