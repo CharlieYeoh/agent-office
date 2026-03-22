@@ -63,10 +63,25 @@ class Agent:
 
 # ── Agent loop ────────────────────────────────────────────────────────────
 def run_agent(task: str, agent: Agent, verbose: bool = True) -> str:
-    agent.memory.add({"role": "user", "content": task})
+    """
+    Run a single agent on a task.
+    Automatically injects relevant memory context and saves the result.
+    """
+    from memory.db import build_memory_context, save_memory
+
+    # Build memory context from previous sessions
+    memory_ctx = build_memory_context(agent.name, task)
+    full_task  = (memory_ctx + task) if memory_ctx else task
+
+    agent.memory.add({"role": "user", "content": full_task})
+
     if verbose:
         print(f"\nAgent : {agent.name}")
         print(f"Task  : {task}")
+        if memory_ctx:
+            print(f"Memory: {len(memory_ctx)} chars of context injected")
+
+    result = "No response."
 
     for iteration in range(10):
         response = client.messages.create(
@@ -78,13 +93,13 @@ def run_agent(task: str, agent: Agent, verbose: bool = True) -> str:
         )
 
         if response.stop_reason == "end_turn":
-            answer = next(
+            result = next(
                 (b.text for b in response.content if hasattr(b, "text")),
                 "No response."
             )
             if verbose:
-                print(f"Answer: {answer}")
-            return answer
+                print(f"Answer: {result}")
+            break
 
         if response.stop_reason == "tool_use":
             agent.memory.add({"role": "assistant", "content": response.content})
@@ -94,44 +109,26 @@ def run_agent(task: str, agent: Agent, verbose: bool = True) -> str:
                     continue
                 if verbose:
                     print(f"  Tool  : {block.name}({json.dumps(block.input)})")
-                result = execute_tool(block.name, block.input)
+                tool_result = execute_tool(block.name, block.input)
                 if verbose:
-                    print(f"  Result: {str(result)[:200]}")
+                    print(f"  Result: {str(tool_result)[:200]}")
                 results.append({
                     "type":        "tool_result",
                     "tool_use_id": block.id,
-                    "content":     result,
+                    "content":     tool_result,
                 })
             agent.memory.add({"role": "user", "content": results})
 
-    return "Agent did not finish within 10 steps."
+    # Save to persistent memory after every successful run
+    try:
+        summary = result[:200] if result else ""
+        save_memory(
+            agent_name=agent.name,
+            task=task,
+            result=result,
+            summary=summary,
+        )
+    except Exception:
+        pass  # Never crash the agent because memory failed
 
-
-# ── Basic agents (original three) ─────────────────────────────────────────
-AGENTS = {
-    "researcher": Agent(
-        name="Researcher",
-        role="a thorough research agent",
-        goal="find accurate answers using web search",
-        tool_names=["web_search", "get_datetime"],
-    ),
-    "writer": Agent(
-        name="Writer",
-        role="a clear writing agent",
-        goal="produce well-written text and summaries",
-        tool_names=["read_file", "write_file", "get_datetime"],
-    ),
-    "scheduler": Agent(
-        name="Scheduler",
-        role="a personal assistant and scheduler",
-        goal="help organise tasks, plans, and daily schedules",
-        tool_names=["get_datetime", "read_file", "write_file"],
-    ),
-}
-
-
-if __name__ == "__main__":
-    result = run_agent(
-        "What day of the week is it today?",
-        AGENTS["scheduler"]
-    )
+    return result
