@@ -1,11 +1,18 @@
-import io
+import io, os, json
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
 
 def _drive_service():
-    creds = Credentials.from_authorized_user_file('token.json')
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json')
+    else:
+        creds_json = os.environ.get('GOOGLE_TOKEN_JSON')
+        if creds_json:
+            creds = Credentials.from_authorized_user_info(json.loads(creds_json))
+        else:
+            raise RuntimeError('No Google credentials: token.json not found and GOOGLE_TOKEN_JSON not set.')
     return build('drive', 'v3', credentials=creds)
 
 

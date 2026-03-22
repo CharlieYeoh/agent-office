@@ -4,7 +4,14 @@ from googleapiclient.discovery import build
 
 
 def _gmail_service():
-    creds = Credentials.from_authorized_user_file('token.json')
+    if os.path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json')
+    else:
+        creds_json = os.environ.get('GOOGLE_TOKEN_JSON')
+        if creds_json:
+            creds = Credentials.from_authorized_user_info(json.loads(creds_json))
+        else:
+            raise RuntimeError('No Google credentials: token.json not found and GOOGLE_TOKEN_JSON not set.')
     return build('gmail', 'v1', credentials=creds)
 
 
