@@ -193,8 +193,13 @@ def read_emails(max_results: int = 10) -> str:
     """Read the latest N emails from Gmail inbox."""
     try:
         svc      = _gmail_service()
+        # Get the label ID for 'school'
+        labels = svc.users().labels().list(userId="me").execute().get("labels", [])
+        school_label = next((l["id"] for l in labels if l["name"].lower() == "school"), None)
+        if not school_label:
+            return "No label named 'school' found in your Gmail. Create it in Gmail settings first."
         messages = svc.users().messages().list(
-            userId="me", labelIds=["INBOX"], maxResults=int(max_results)
+            userId="me", labelIds=[school_label], maxResults=int(max_results)
         ).execute().get("messages", [])
 
         if not messages:
