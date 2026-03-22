@@ -132,3 +132,32 @@ def run_agent(task: str, agent: Agent, verbose: bool = True) -> str:
         pass  # Never crash the agent because memory failed
 
     return result
+
+# ── Define your agents ────────────────────────────────────────────────────
+AGENTS = {
+    "researcher": Agent(
+        name="Researcher",
+        role="a thorough research agent",
+        goal="find accurate answers using web search",
+        tool_names=["web_search", "get_datetime"],
+    ),
+    "writer": Agent(
+        name="Writer",
+        role="a clear writing agent",
+        goal="produce well-written text and summaries",
+        tool_names=["read_file", "write_file", "get_datetime"],
+    ),
+    "scheduler": Agent(
+        name="Scheduler",
+        role="a personal assistant and scheduler",
+        goal="help organise tasks, plans, and daily schedules",
+        tool_names=["get_datetime", "read_file", "write_file"],
+    ),
+}
+
+
+if __name__ == "__main__":
+    result = run_agent(
+        "What day of the week is it today?",
+        AGENTS["scheduler"]
+    )
