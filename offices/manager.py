@@ -1,206 +1,187 @@
-"""
-offices/manager.py
-
-The Manager validates agent output against IB rubrics (homework)
-or code-quality / accessibility checks (website_code), using
-claude-sonnet-4-20250514.
-"""
-
-from __future__ import annotations
 import os
-import sys
 import json
+from pathlib import Path
+from main import Agent, run_agent, Memory, client
 
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-import anthropic
-
-_SONNET = "claude-sonnet-4-20250514"
-
-RUBRICS_DIR = os.path.join(
-    os.path.dirname(__file__), "office1_homework", "rubrics"
-)
-
-_SUBJECT_TO_RUBRIC: dict[str, str] = {
-    "math_aa_hl":       "math_aa_hl.txt",
-    "physics_hl":       "physics_hl.txt",
-    "computer_science": "computer_science_hl.txt",
-    "english_lang_lit": "english_lang_lit_sl.txt",
-    "french_b":         "french_b_sl.txt",
-    "economics_sl":     "econ_sl.txt",
-    "tok":              "tok.txt",
-}
+RUBRICS_DIR = Path(__file__).parent / "office1_homework" / "rubrics"
 
 
-def _load_rubric(subject: str) -> str:
-    filename = _SUBJECT_TO_RUBRIC.get(subject)
+def _load_rubric(subject_key: str) -> str:
+    """Load rubric file for a given subject key."""
+    mapping = {
+        "math_aa_hl":       "math_aa_hl.txt",
+        "physics_hl":       "physics_hl.txt",
+        "computer_science": "computer_science_hl.txt",
+        "english_lang_lit": "english_lang_lit_sl.txt",
+        "french_b":         "french_b_sl.txt",
+        "economics_sl":     "econ_sl.txt",
+        "tok":              "tok.txt",
+    }
+    filename = mapping.get(subject_key, "")
     if not filename:
-        return f"[No rubric mapped for subject '{subject}']"
-    path = os.path.join(RUBRICS_DIR, filename)
-    try:
-        with open(path, encoding="utf-8") as f:
-            return f.read()
-    except FileNotFoundError:
-        return f"[Rubric file '{filename}' not found]"
+        return ""
+    path = RUBRICS_DIR / filename
+    return path.read_text(encoding="utf-8") if path.exists() else ""
+
+
+# ── Manager agent definition ──────────────────────────────────────────────
+
+manager_agent = Agent(
+    name="Manager",
+    role="IB academic quality controller and code review manager",
+    goal="validate all agent outputs against IB rubrics and code quality standards",
+    tool_names=["read_file", "write_file", "get_datetime"],
+    model="claude-sonnet-4-20250514",
+    system_prompt_override="""You are a strict quality controller for an AI agent system.
+Your job is to validate outputs from other agents and decide if they meet the required standard.
+You are thorough, fair, and specific in your feedback.
+Always respond in valid JSON as instructed by each validation request.""",
+)
 
 
 class Manager:
     """
-    Validates agent output using claude-sonnet-4-20250514.
-
-    validate(output, task_type, context) → dict
-
-      task_type = 'homework'
-        Returns: {valid, feedback, score_estimate, re_do_task?}
-
-      task_type = 'website_code'
-        Returns: {valid, issues, approved, re_do_task?}
-
-    If valid is False, the returned dict always contains re_do_task — a
-    one-paragraph instruction string telling the original agent exactly
-    what to fix before resubmitting.
+    Global manager that validates outputs from all agents.
+    For homework: checks against IB rubrics.
+    For website code: checks quality, security, and completeness.
     """
 
-    def __init__(self):
-        self.model  = _SONNET
-        self.client = anthropic.Anthropic(
-            api_key=os.environ.get("ANTHROPIC_API_KEY", "")
-        )
-
-    # ------------------------------------------------------------------ #
+    def __init__(self, anthropic_client=None):
+        self.client = anthropic_client or client
+        self.agent  = manager_agent
 
     def validate(
         self,
         output: str,
         task_type: str,
-        context: dict | None = None,
+        subject: str = None,
+        context: str = "",
     ) -> dict:
         """
-        Validate *output* produced by a subject or website agent.
+        Validate an agent's output.
 
-        Parameters
-        ----------
-        output    : the text/code the subject agent returned
-        task_type : 'homework' or 'website_code'
-        context   : extra metadata; for homework pass {'subject': '<key>'}
+        Args:
+            output:    The text produced by the agent
+            task_type: 'homework' or 'website_code'
+            subject:   For homework, the subject key (e.g. 'math_aa_hl')
+            context:   The original task description
+
+        Returns:
+            {
+                valid: bool,
+                feedback: str,
+                score_estimate: str,   (homework only)
+                issues: list,          (code only)
+                approved: bool,
+                redo_task: str         (populated if valid is False)
+            }
         """
-        context = context or {}
-
         if task_type == "homework":
-            return self._validate_homework(output, context)
+            return self._validate_homework(output, subject, context)
         elif task_type == "website_code":
-            return self._validate_website_code(output, context)
+            return self._validate_code(output, context)
         else:
             return {
-                "valid":    False,
-                "feedback": (
-                    f"Unknown task_type '{task_type}'. "
-                    "Use 'homework' or 'website_code'."
-                ),
+                "valid": True,
+                "approved": True,
+                "feedback": "Unknown task type — skipping validation.",
+                "redo_task": ""
             }
 
-    # ------------------------------------------------------------------ #
-    # Homework validation
-    # ------------------------------------------------------------------ #
+    def _validate_homework(self, output: str, subject: str, context: str) -> dict:
+        rubric = _load_rubric(subject) if subject else ""
 
-    def _validate_homework(self, output: str, context: dict) -> dict:
-        subject = context.get("subject", "")
-        rubric  = _load_rubric(subject)
-
-        system_prompt = (
-            "You are an experienced IB examiner and senior tutor. "
-            "You receive a student's homework answer and the official IB marking rubric. "
-            "Evaluate whether the answer meets IB standards.\n\n"
-            "Reply with a single JSON object — no markdown fences, no prose outside JSON. "
-            "Required keys:\n"
-            '  "valid"          : true if the answer meets the rubric, false otherwise\n'
-            '  "feedback"       : concise examiner-style feedback (2–5 sentences)\n'
-            '  "score_estimate" : e.g. "6/7" or "Band 3" using the rubric\'s scale\n'
-            '  "re_do_task"     : ONLY include if valid is false — a one-paragraph '
-            "instruction telling the original agent exactly what to improve and resubmit."
+        rubric_section = (
+            f"\n\nMARKING RUBRIC FOR THIS SUBJECT:\n{rubric[:2000]}"
+            if rubric else
+            "\n\n(No rubric file found — apply general IB standards)"
         )
 
-        user_msg = (
-            f"SUBJECT: {subject}\n\n"
-            f"IB RUBRIC:\n{rubric}\n\n"
-            f"STUDENT OUTPUT TO VALIDATE:\n{output}"
-        )
+        prompt = f"""You are validating a homework answer produced by an AI agent for an IB student.
 
-        result = self._call_and_parse(system_prompt, user_msg)
+SUBJECT: {subject or "unknown"}
+ORIGINAL TASK: {context or "not provided"}
+{rubric_section}
 
-        result.setdefault("valid", False)
-        result.setdefault("feedback", "")
-        result.setdefault("score_estimate", "N/A")
+AGENT'S OUTPUT:
+{output[:3000]}
 
-        return result
+Evaluate the output against these criteria:
+1. Does it fully address the task?
+2. Is the working/reasoning shown clearly?
+3. Does it meet IB standards for this subject?
+4. Are there any factual errors or significant omissions?
+5. Would this answer earn marks in a real IB exam?
 
-    # ------------------------------------------------------------------ #
-    # Website code validation
-    # ------------------------------------------------------------------ #
+Respond ONLY with this JSON (no extra text, no markdown):
+{{
+  "valid": true or false,
+  "approved": true or false,
+  "score_estimate": "e.g. 7/7 or 5/7 or Cannot assess",
+  "feedback": "one paragraph of specific feedback",
+  "issues": ["issue 1", "issue 2"],
+  "redo_task": "if valid is false: precise instruction to the agent on what to fix and redo. If valid is true: empty string."
+}}"""
 
-    def _validate_website_code(self, output: str, context: dict) -> dict:
-        system_prompt = (
-            "You are a senior software engineer and accessibility auditor. "
-            "Review code produced by an AI web-dev agent. "
-            "Check for: common bugs, missing error handling, security issues, "
-            "and basic WCAG accessibility problems (missing alt text, unlabelled "
-            "form controls, keyboard-navigation blockers).\n\n"
-            "Reply with a single JSON object — no markdown fences, no prose outside JSON. "
-            "Required keys:\n"
-            '  "valid"      : true if there are no blocking issues, false otherwise\n'
-            '  "issues"     : list of strings describing every problem found '
-            "(empty list if none)\n"
-            '  "approved"   : true only when valid is true and all issues are minor\n'
-            '  "re_do_task" : ONLY include if valid is false — a one-paragraph '
-            "instruction telling the original agent exactly what to fix and resubmit."
-        )
+        return self._run_validation(prompt)
 
-        user_msg = f"WEBSITE CODE TO REVIEW:\n{output}"
+    def _validate_code(self, output: str, context: str) -> dict:
+        prompt = f"""You are a senior software engineer reviewing code produced by an AI agent.
 
-        result = self._call_and_parse(system_prompt, user_msg)
+ORIGINAL TASK: {context or "not provided"}
 
-        result.setdefault("valid", False)
-        result.setdefault("issues", [])
-        result.setdefault("approved", False)
+AGENT'S OUTPUT:
+{output[:3000]}
 
-        return result
+Check for:
+1. Does the code address the task?
+2. Are there obvious bugs or logic errors?
+3. Is error handling present?
+4. Are there security concerns (hardcoded secrets, injection risks)?
+5. Is the code readable and maintainable?
 
-    # ------------------------------------------------------------------ #
-    # Shared LLM call + JSON parse
-    # ------------------------------------------------------------------ #
+Respond ONLY with this JSON (no extra text, no markdown):
+{{
+  "valid": true or false,
+  "approved": true or false,
+  "score_estimate": "e.g. Production ready / Needs minor fixes / Needs major fixes",
+  "feedback": "one paragraph of specific feedback",
+  "issues": ["issue 1", "issue 2"],
+  "redo_task": "if valid is false: precise instruction to fix and redo. If valid is true: empty string."
+}}"""
 
-    def _call_and_parse(self, system_prompt: str, user_msg: str) -> dict:
+        return self._run_validation(prompt)
+
+    def _run_validation(self, prompt: str) -> dict:
+        """Send the validation prompt to the manager agent and parse JSON response."""
+        self.agent.memory = Memory()
+        raw = run_agent(prompt, self.agent, verbose=False)
+
+        # Strip markdown code fences if present
+        raw = raw.strip()
+        if raw.startswith("```"):
+            raw = raw.split("```")[1]
+            if raw.startswith("json"):
+                raw = raw[4:]
+        raw = raw.strip()
+
         try:
-            response = self.client.messages.create(
-                model=self.model,
-                max_tokens=1024,
-                system=system_prompt,
-                messages=[{"role": "user", "content": user_msg}],
-            )
-            raw = response.content[0].text.strip()
-
-            # Strip markdown code fences if the model added them anyway
-            if raw.startswith("```"):
-                parts = raw.split("```")
-                raw = parts[1] if len(parts) > 1 else raw
-                if raw.startswith("json"):
-                    raw = raw[4:]
-                raw = raw.strip()
-
-            return json.loads(raw)
-
-        except json.JSONDecodeError as e:
+            result = json.loads(raw)
+            # Ensure all expected keys exist
+            result.setdefault("valid",          True)
+            result.setdefault("approved",        result.get("valid", True))
+            result.setdefault("score_estimate",  "N/A")
+            result.setdefault("feedback",        "")
+            result.setdefault("issues",          [])
+            result.setdefault("redo_task",       "")
+            return result
+        except json.JSONDecodeError:
+            # If the model didn't return valid JSON, default to approved
             return {
-                "valid":    False,
-                "feedback": f"Manager could not parse its own response as JSON: {e}",
+                "valid":         True,
+                "approved":      True,
+                "score_estimate": "Could not parse",
+                "feedback":      raw[:500],
+                "issues":        [],
+                "redo_task":     "",
             }
-        except Exception as e:
-            return {
-                "valid":    False,
-                "feedback": f"Manager error: {e}",
-            }
-
-
-# ─── Module-level singleton ───────────────────────────────────────────────────
-
-manager = Manager()

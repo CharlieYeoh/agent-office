@@ -51,7 +51,9 @@ def get_homework(days_ahead: int = 14) -> str:
 
         result = []
         for hw in homework_list:
-            attachments = ", ".join(a.name for a in hw.attachments) if hw.attachments else "none"
+            raw_attachments = getattr(hw, 'attachments', None) or getattr(hw, 'files', None) or []
+            attachments = ", ".join(a.name for a in raw_attachments) if raw_attachments else "none"
+
             result.append(
                 f"Subject: {hw.subject.name}\n"
                 f"Due: {hw.date}\n"
@@ -79,7 +81,8 @@ def get_homework_for_subject(subject_name: str, days_ahead: int = 14) -> str:
             return f"No homework found for subject: {subject_name}"
         result = []
         for hw in filtered:
-            attachments = ", ".join(a.name for a in hw.attachments) if hw.attachments else "none"
+            raw_attachments = getattr(hw, 'attachments', None) or getattr(hw, 'files', None) or []
+            attachments = ", ".join(a.name for a in raw_attachments) if raw_attachments else "none"
             result.append(
                 f"Due: {hw.date}\n"
                 f"Description: {hw.description}\n"

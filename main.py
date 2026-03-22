@@ -1,104 +1,137 @@
 import os
+import json
+import anthropic
 from dotenv import load_dotenv
-from tools.toolbox import calculator, web_search, read_file, write_file, get_datetime
-from tools.pronote_tool import get_homework, get_homework_for_subject
-from tools.gmail_tool import read_emails, draft_reply
-from tools.gdrive_tool import list_files_in_folder, read_text_file
+from tools.toolbox import TOOL_REGISTRY, execute_tool
 
 load_dotenv()
 
+client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
-# ─── Memory ───────────────────────────────────────────────────────────────────
 
+# ── Memory ────────────────────────────────────────────────────────────────
 class Memory:
-    """Simple in-process short-term memory (list of dicts)."""
-
     def __init__(self):
-        self.messages: list[dict] = []
+        self.short_term = []
+        self.long_term  = []
 
-    def add(self, role: str, content: str):
-        self.messages.append({"role": role, "content": content})
-
-    def get_history(self) -> list[dict]:
-        return list(self.messages)
-
-    def clear(self):
-        self.messages = []
+    def add(self, message: dict):
+        self.short_term.append(message)
+        if len(self.short_term) > 20:
+            dropped = self.short_term.pop(0)
+            if dropped.get("role") == "assistant":
+                self.long_term.append(str(dropped.get("content", ""))[:120])
 
 
-# ─── Agent ────────────────────────────────────────────────────────────────────
-
+# ── Agent ─────────────────────────────────────────────────────────────────
 class Agent:
-    """
-    A simple agent that loops:
-      1. Calls the LLM with the current memory.
-      2. Checks if the model wants to call a tool.
-      3. Runs the tool and adds the result to memory.
-      4. Repeats until a final answer is produced.
-    """
+    def __init__(
+        self,
+        name: str,
+        role: str,
+        goal: str,
+        tool_names: list,
+        model: str = "claude-haiku-4-5-20251001",
+        system_prompt_override: str = None,
+    ):
+        self.name                   = name
+        self.role                   = role
+        self.goal                   = goal
+        self.tool_names             = tool_names
+        self.model                  = model
+        self.memory                 = Memory()
+        self._system_prompt_override = system_prompt_override
 
-    def __init__(self, name: str, instructions: str, tools: list):
-        self.name = name
-        self.instructions = instructions
-        self.tools = {t.__name__: t for t in tools}
-        self.memory = Memory()
+    @property
+    def system_prompt(self) -> str:
+        if self._system_prompt_override:
+            return self._system_prompt_override
+        return (
+            f"You are {self.role}.\n"
+            f"Your goal: {self.goal}\n\n"
+            "Be concise. Use tools when they help."
+        )
 
-    def reset(self):
-        self.memory.clear()
+    @property
+    def tools_schema(self) -> list:
+        return [
+            TOOL_REGISTRY[n][1]
+            for n in self.tool_names
+            if n in TOOL_REGISTRY
+        ]
 
 
-# ─── run_agent ────────────────────────────────────────────────────────────────
-
+# ── Agent loop ────────────────────────────────────────────────────────────
 def run_agent(task: str, agent: Agent, verbose: bool = True) -> str:
-    """
-    Drive an agent to completion on *task*.
-    Returns the final answer string.
-    """
-    import google.generativeai as genai
-
-    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
-
-    # Build Gemini tool declarations from the agent's tool callables
-    gemini_tools = list(agent.tools.values()) if agent.tools else []
-
-    model = genai.GenerativeModel(
-        model_name="gemini-2.0-flash",
-        system_instruction=agent.instructions,
-        tools=gemini_tools if gemini_tools else None,
-    )
-
-    chat = model.start_chat(enable_automatic_function_calling=True)
-
-    agent.memory.add("user", task)
-
+    agent.memory.add({"role": "user", "content": task})
     if verbose:
-        print(f"\n[{agent.name}] Task: {task}")
+        print(f"\nAgent : {agent.name}")
+        print(f"Task  : {task}")
 
-    response = chat.send_message(task)
-    result = response.text
+    for iteration in range(10):
+        response = client.messages.create(
+            model=agent.model,
+            max_tokens=2048,
+            system=agent.system_prompt,
+            tools=agent.tools_schema,
+            messages=agent.memory.short_term,
+        )
 
-    agent.memory.add("assistant", result)
+        if response.stop_reason == "end_turn":
+            answer = next(
+                (b.text for b in response.content if hasattr(b, "text")),
+                "No response."
+            )
+            if verbose:
+                print(f"Answer: {answer}")
+            return answer
 
-    if verbose:
-        print(f"[{agent.name}] Result: {result}")
+        if response.stop_reason == "tool_use":
+            agent.memory.add({"role": "assistant", "content": response.content})
+            results = []
+            for block in response.content:
+                if block.type != "tool_use":
+                    continue
+                if verbose:
+                    print(f"  Tool  : {block.name}({json.dumps(block.input)})")
+                result = execute_tool(block.name, block.input)
+                if verbose:
+                    print(f"  Result: {str(result)[:200]}")
+                results.append({
+                    "type":        "tool_result",
+                    "tool_use_id": block.id,
+                    "content":     result,
+                })
+            agent.memory.add({"role": "user", "content": results})
 
-    return result
+    return "Agent did not finish within 10 steps."
 
 
-# ─── AGENTS registry ──────────────────────────────────────────────────────────
-
-general_agent = Agent(
-    name="General Assistant",
-    instructions=(
-        "You are a helpful general-purpose assistant. "
-        "Use the available tools whenever needed to answer accurately."
+# ── Basic agents (original three) ─────────────────────────────────────────
+AGENTS = {
+    "researcher": Agent(
+        name="Researcher",
+        role="a thorough research agent",
+        goal="find accurate answers using web search",
+        tool_names=["web_search", "get_datetime"],
     ),
-    tools=[calculator, web_search, read_file, write_file, get_datetime,
-           get_homework, get_homework_for_subject,
-           read_emails, draft_reply,
-           list_files_in_folder, read_text_file],
-)
-
-AGENTS: dict[str, Agent] = {
-    "general": general_agent,
+    "writer": Agent(
+        name="Writer",
+        role="a clear writing agent",
+        goal="produce well-written text and summaries",
+        tool_names=["read_file", "write_file", "get_datetime"],
+    ),
+    "scheduler": Agent(
+        name="Scheduler",
+        role="a personal assistant and scheduler",
+        goal="help organise tasks, plans, and daily schedules",
+        tool_names=["get_datetime", "read_file", "write_file"],
+    ),
 }
+
+
+if __name__ == "__main__":
+    result = run_agent(
+        "What day of the week is it today?",
+        AGENTS["scheduler"]
+    )
