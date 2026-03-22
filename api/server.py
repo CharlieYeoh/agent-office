@@ -85,21 +85,17 @@ def run_task(req: TaskRequest):
 
 @app.post("/homework")
 def run_homework(req: HomeworkRequest):
-    """Run a specific homework subject agent with manager validation."""
     if req.subject not in HOMEWORK_AGENTS:
-        return {"error": f"Unknown subject '{req.subject}'. Valid subjects: "
-                         "math_aa_hl, physics_hl, computer_science, "
-                         "english_lang_lit, french_b, economics_sl, tok"}
-    agent = HOMEWORK_AGENTS[req.subject]
-    return run_with_validation(req.task, agent, "homework", subject=req.subject)
+        return {"error": f"Unknown subject '{req.subject}'"}
+    try:
+        agent = HOMEWORK_AGENTS[req.subject]
+        return run_with_validation(req.task, agent, "homework", subject=req.subject)
+    except Exception as e:
+        return {"error": str(e), "subject": req.subject}
 
 
 @app.get("/homework/fetch")
 def fetch_all_homework():
-    """
-    Run all 7 subject agents in parallel using a thread pool.
-    All agents start simultaneously — roughly 7x faster than sequential.
-    """
     subjects = [
         "math_aa_hl", "physics_hl", "computer_science",
         "english_lang_lit", "french_b", "economics_sl", "tok"
@@ -120,16 +116,18 @@ def fetch_all_homework():
             result = run_agent(task, agent, verbose=False)
             return name, result
         except Exception as e:
-            return name, f"Error: {e}"
+            return name, f"Error in {name}: {e}"
 
-    results = {}
-    with ThreadPoolExecutor(max_workers=7) as executor:
-        futures = {executor.submit(run_subject, name): name for name in subjects}
-        for future in futures:
-            name, result = future.result()
-            results[name] = result
-
-    return results
+    try:
+        results = {}
+        with ThreadPoolExecutor(max_workers=7) as executor:
+            futures = {executor.submit(run_subject, name): name for name in subjects}
+            for future in futures:
+                name, result = future.result()
+                results[name] = result
+        return results
+    except Exception as e:
+        return {"error": str(e)}
 
 
 @app.get("/emails")
@@ -154,8 +152,11 @@ def run_website_agent(req: WebsiteRequest):
         return {"error": f"Unknown agent: {req.agent}. Valid agents: "
                          "product_manager, ui_designer, frontend_dev, "
                          "backend_dev, qa_tester, devops"}
-    agent = WEBSITE_AGENTS[req.agent]
-    return run_with_validation(req.task, agent, "website_code")
+    try:
+        agent = WEBSITE_AGENTS[req.agent]
+        return run_with_validation(req.task, agent, "website_code")
+    except Exception as e:
+        return {"error": str(e), "agent": req.agent}
 
 
 @app.post("/validate")
