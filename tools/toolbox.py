@@ -1,6 +1,7 @@
 import os
 import io
 import json
+import base64
 import requests
 from datetime import datetime, date, timedelta
 from pathlib import Path
@@ -79,6 +80,21 @@ def calculator(expression: str) -> str:
 PRONOTE_TOKEN_FILE = Path("pronote_token.json")
 
 
+def _load_json_from_env(var_name: str, b64_var_name: str | None = None):
+    """Load a JSON object from env as raw JSON or base64-encoded JSON."""
+    raw = os.environ.get(var_name)
+    if raw:
+        return json.loads(raw)
+
+    if b64_var_name:
+        raw_b64 = os.environ.get(b64_var_name)
+        if raw_b64:
+            decoded = base64.b64decode(raw_b64).decode("utf-8")
+            return json.loads(decoded)
+
+    return None
+
+
 def _pronote_client():
     """Connect to Pronote and return a logged-in client."""
     try:
@@ -86,29 +102,49 @@ def _pronote_client():
     except ImportError:
         raise RuntimeError("pronotepy not installed. Run: pip install pronotepy")
 
-    url      = os.environ.get("PRONOTE_URL", "")
-    username = os.environ.get("PRONOTE_USERNAME", "")
+    url = os.environ.get("PRONOTE_URL", "").strip()
+    username = os.environ.get("PRONOTE_USERNAME", "").strip()
     password = os.environ.get("PRONOTE_PASSWORD", "")
 
     if not url:
         raise RuntimeError("PRONOTE_URL not set in .env")
 
-    # Try token login first (faster, avoids re-authenticating every call)
+    # Try token from env first (best for cloud deployment)
+    env_token = _load_json_from_env("PRONOTE_TOKEN_JSON", "PRONOTE_TOKEN_JSON_B64")
+    if env_token:
+        try:
+            client = pronotepy.Client.token_login(**env_token)
+            if client.logged_in:
+                return client
+        except Exception:
+            pass
+
+    # Then try token cache file (best for local usage)
     if PRONOTE_TOKEN_FILE.exists():
         try:
             creds  = json.loads(PRONOTE_TOKEN_FILE.read_text())
             client = pronotepy.Client.token_login(**creds)
             if client.logged_in:
-                PRONOTE_TOKEN_FILE.write_text(
-                    json.dumps(client.export_credentials())
-                )
+                try:
+                    PRONOTE_TOKEN_FILE.write_text(json.dumps(client.export_credentials()))
+                except Exception:
+                    pass
                 return client
         except Exception:
             pass
 
+    if not username or not password:
+        raise RuntimeError(
+            "Pronote credentials missing. Set PRONOTE_USERNAME and PRONOTE_PASSWORD, "
+            "or provide PRONOTE_TOKEN_JSON."
+        )
+
     client = pronotepy.Client(url, username=username, password=password)
     if client.logged_in:
-        PRONOTE_TOKEN_FILE.write_text(json.dumps(client.export_credentials()))
+        try:
+            PRONOTE_TOKEN_FILE.write_text(json.dumps(client.export_credentials()))
+        except Exception:
+            pass
         return client
     raise RuntimeError("Could not log in to Pronote — check URL, username, password in .env")
 
@@ -185,18 +221,16 @@ def _gmail_service():
     from google.oauth2.credentials import Credentials
     from google.auth.transport.requests import Request
     from googleapiclient.discovery import build
-    import json as _json
 
-    token_json = os.environ.get("GOOGLE_TOKEN_JSON")
-    if token_json:
-        info = _json.loads(token_json)
+    info = _load_json_from_env("GOOGLE_TOKEN_JSON", "GOOGLE_TOKEN_JSON_B64")
+    if info:
         creds = Credentials.from_authorized_user_info(info)
     elif os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json")
     else:
         raise RuntimeError(
             "No Google credentials found. "
-            "Set GOOGLE_TOKEN_JSON in Render environment variables."
+            "Set GOOGLE_TOKEN_JSON (or GOOGLE_TOKEN_JSON_B64) in Render environment variables."
         )
 
     # Auto-refresh if expired
@@ -270,14 +304,23 @@ def draft_reply(message_id: str, reply_text: str) -> str:
 
 def _drive_service():
     from google.oauth2.credentials import Credentials
+    from google.auth.transport.requests import Request
     from googleapiclient.discovery import build
 
-    token_json = os.environ.get("GOOGLE_TOKEN_JSON")
-    if token_json:
-        import json as _json
-        creds = Credentials.from_authorized_user_info(_json.loads(token_json))
-    else:
+    info = _load_json_from_env("GOOGLE_TOKEN_JSON", "GOOGLE_TOKEN_JSON_B64")
+    if info:
+        creds = Credentials.from_authorized_user_info(info)
+    elif os.path.exists("token.json"):
         creds = Credentials.from_authorized_user_file("token.json")
+    else:
+        raise RuntimeError(
+            "No Google credentials found. "
+            "Set GOOGLE_TOKEN_JSON (or GOOGLE_TOKEN_JSON_B64) in Render environment variables."
+        )
+
+    if creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+
     return build("drive", "v3", credentials=creds)
 
 

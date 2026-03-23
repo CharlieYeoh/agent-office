@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: agent-office
+    env: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.server:app --host 0.0.0.0 --port $PORT
+    autoDeploy: true
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: PRONOTE_URL
+        sync: false
+      - key: PRONOTE_USERNAME
+        sync: false
+      - key: PRONOTE_PASSWORD
+        sync: false
+      - key: PRONOTE_TOKEN_JSON
+        sync: false
+      - key: PRONOTE_TOKEN_JSON_B64
+        sync: false
+      - key: GOOGLE_TOKEN_JSON
+        sync: false
+      - key: GOOGLE_TOKEN_JSON_B64
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.12.6

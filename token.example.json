@@ -1,0 +1,14 @@
+{
+  "token": "<access-token>",
+  "refresh_token": "<refresh-token>",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "client_id": "<oauth-client-id>",
+  "client_secret": "<oauth-client-secret>",
+  "scopes": [
+    "https://www.googleapis.com/auth/gmail.modify",
+    "https://www.googleapis.com/auth/drive.readonly"
+  ],
+  "universe_domain": "googleapis.com",
+  "account": "",
+  "expiry": "YYYY-MM-DDTHH:MM:SSZ"
+}

@@ -1,18 +1,36 @@
 import io, os, json
+import base64
 from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 
 
+def _load_google_token_info():
+    raw = os.environ.get("GOOGLE_TOKEN_JSON")
+    if raw:
+        return json.loads(raw)
+
+    raw_b64 = os.environ.get("GOOGLE_TOKEN_JSON_B64")
+    if raw_b64:
+        decoded = base64.b64decode(raw_b64).decode("utf-8")
+        return json.loads(decoded)
+
+    return None
+
+
 def _drive_service():
-    if os.path.exists('token.json'):
+    token_info = _load_google_token_info()
+    if token_info:
+        creds = Credentials.from_authorized_user_info(token_info)
+    elif os.path.exists('token.json'):
         creds = Credentials.from_authorized_user_file('token.json')
     else:
-        creds_json = os.environ.get('GOOGLE_TOKEN_JSON')
-        if creds_json:
-            creds = Credentials.from_authorized_user_info(json.loads(creds_json))
-        else:
-            raise RuntimeError('No Google credentials: token.json not found and GOOGLE_TOKEN_JSON not set.')
+        raise RuntimeError('No Google credentials: token.json not found and GOOGLE_TOKEN_JSON/GOOGLE_TOKEN_JSON_B64 not set.')
+
+    if creds.expired and creds.refresh_token:
+        creds.refresh(Request())
+
     return build('drive', 'v3', credentials=creds)
 
 

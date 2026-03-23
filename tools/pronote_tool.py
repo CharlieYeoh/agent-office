@@ -1,6 +1,7 @@
 import pronotepy
 import os
 import json
+import base64
 from datetime import date, timedelta
 from pathlib import Path
 from dotenv import load_dotenv
@@ -10,26 +11,61 @@ load_dotenv()
 CREDENTIALS_FILE = Path("pronote_token.json")
 
 
+def _load_json_from_env(var_name: str, b64_var_name: str | None = None):
+    raw = os.environ.get(var_name)
+    if raw:
+        return json.loads(raw)
+
+    if b64_var_name:
+        raw_b64 = os.environ.get(b64_var_name)
+        if raw_b64:
+            decoded = base64.b64decode(raw_b64).decode("utf-8")
+            return json.loads(decoded)
+
+    return None
+
+
 def _get_client():
     """Connect to Pronote and return a client object."""
-    url      = os.environ["PRONOTE_URL"]
-    username = os.environ["PRONOTE_USERNAME"]
-    password = os.environ["PRONOTE_PASSWORD"]
+    url = os.environ["PRONOTE_URL"]
+    username = os.environ.get("PRONOTE_USERNAME", "")
+    password = os.environ.get("PRONOTE_PASSWORD", "")
+
+    env_token = _load_json_from_env("PRONOTE_TOKEN_JSON", "PRONOTE_TOKEN_JSON_B64")
+    if env_token:
+        try:
+            client = pronotepy.Client.token_login(**env_token)
+            if client.logged_in:
+                return client
+        except Exception:
+            pass
 
     if CREDENTIALS_FILE.exists():
         try:
             creds = json.loads(CREDENTIALS_FILE.read_text())
             client = pronotepy.Client.token_login(**creds)
             if client.logged_in:
-                CREDENTIALS_FILE.write_text(json.dumps(client.export_credentials()))
+                try:
+                    CREDENTIALS_FILE.write_text(json.dumps(client.export_credentials()))
+                except Exception:
+                    pass
                 return client
         except Exception:
             pass
 
+    if not username or not password:
+        raise RuntimeError(
+            "Pronote credentials missing. Set PRONOTE_USERNAME and PRONOTE_PASSWORD, "
+            "or provide PRONOTE_TOKEN_JSON."
+        )
+
     # Fall back to username/password login
     client = pronotepy.Client(url, username=username, password=password)
     if client.logged_in:
-        CREDENTIALS_FILE.write_text(json.dumps(client.export_credentials()))
+        try:
+            CREDENTIALS_FILE.write_text(json.dumps(client.export_credentials()))
+        except Exception:
+            pass
         return client
     raise RuntimeError("Could not log in to Pronote")
 
